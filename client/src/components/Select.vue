@@ -1,25 +1,49 @@
 
 <template>
-  <div class="select-group">
-    <h3>Flights</h3>
-    <select id="depart" @change="update($event)">
-      <option :key='station.shortName.id' v-for="station in stations" :value="station.shortName">{{ station.shortName }}</option>
-    </select>
+  <main class="select-group">
+    <div class="select-wrapper" v-bind:class="{ active: isActive}">
+      <section class="flight-select">
+        <h1>Flights</h1>
+        <h2>Departure station</h2>
+        <select id="depart" v-model="depart" @change="update($event)">
+          <option placeholder="departure" :key='station.shortName.id' v-for="station in stations" :value="station.shortName">{{ station.shortName }}</option>
+        </select>
+        <h2>Arrival station</h2>
+        <select id="arrive" v-model="arrive">
+          <option :key='connection.shortName.id' v-for="connection in connections" :value="connection.shortName">{{ connection.shortName }}</option>
+        </select>
+        <p v-if="notFound" class="invalid">
+          Sorry, there were no flights found from this station.
+        </p>
+        <div class="datetime">
+          <date-picker @change="departDateSelect($event)" lang="en" v-model="departDate" confirm :not-before="new Date()" :not-after="selectedArriveDate"></date-picker>
+          <date-picker @change="arriveDateSelect($event)" lang="en" v-model="arriveDate" confirm :not-before="selectedDepartDate"></date-picker>
+        </div>
+      </section>
 
-     <select id="arrive">
-      <option :key='connection.shortName.id' v-for="connection in connections" :value="connection.shortName">{{ connection.shortName }}</option>
-    </select>
-
-    <p v-if="depart&&arrive">
-        You selected a flight departing from {{ depart }} and going to {{ arrive }}.
-    </p>
-    <date-picker @change="departDateSelect($event)" lang="en" v-model="departDate" confirm :not-before="new Date()" :not-after="selectedArriveDate"></date-picker>
-    <date-picker @change="arriveDateSelect($event)" lang="en" v-model="arriveDate" confirm :not-before="selectedDepartDate"></date-picker>
-  </div>
+      <section class="selected-message" v-bind:class="{ active: isActive}">
+      <div class="single-flight" v-if="depart&&arrive&&departDate">
+        You selected a flight from: <h3>{{ depart }} </h3> to <h3>{{ arrive }}</h3> on <time> {{ departDate | moment }}.</time>
+        <button type="button" id="confirm-single-btn" class="mx-datepicker-btn mx-datepicker-btn-confirm" @click="confirmSingle($event)">OK</button>
+      </div>
+      <div class="return-flight" v-if="depart&&arrive&&departDate&&arriveDate">
+          Your selected flights are the following: from <h3> {{ depart }} </h3> to <h3> {{ arrive }} </h3> on <time> {{ departDate | moment }} </time> and returning on the <time> {{ arriveDate | moment }}. </time>
+          <button type="button" id="confirm-return-btn" class="mx-datepicker-btn mx-datepicker-btn-confirm" @click="confirmReturn($event)">OK</button>
+      </div>
+      </section>
+    </div>
+    <section v-if="showReturnFlights">
+      <h3>showReturnFlights</h3>
+    </section>
+    <section v-if="showSingleFlights">
+      <h3>showSingleFlights</h3>
+    </section>
+  </main>
 </template>
 <script>
 import axios from 'axios'
 import DatePicker from 'vue2-datepicker'
+import moment from 'moment'
 
 export default {
   components: { DatePicker },
@@ -37,7 +61,9 @@ export default {
       selectedArriveDate: '',
       cityName: {},
       shortNameLUT: {},
-      iataLUT: {}
+      iataLUT: {},
+      notFound: '',
+      isActive: false
     }
   },
   mounted () {
@@ -67,6 +93,7 @@ export default {
     axios.get('https://mock-air.herokuapp.com/asset/stations')
       .then(function (response) {
         vm.stations = response.data
+        // console.log(response.data)
         Object.keys(vm.stations).map(function (key, index) {
           vm.cityName[vm.stations[index].iata] = vm.stations[index].shortName
           vm.shortNameLUT[vm.stations[index].shortName] = index
@@ -76,28 +103,158 @@ export default {
   },
   methods: {
     update (event) {
+      localStorage.clear()
       let vm = this
-      var temp = this.stations[this.shortNameLUT[this.depart]].connections.map((elem) => elem.iata)
-      this.connections = temp.map((elem) => vm.stations[vm.iataLUT[elem]])
+      var temp = this.stations[this.shortNameLUT[this.depart]].connections
+      // console.log(temp)
+      temp = temp.map((elem) => elem.iata)
+      // console.log(temp)
+      temp = temp.map((elem) => vm.stations[vm.iataLUT[elem]])
+      // console.log(temp)
+      if (temp[0] !== undefined) {
+        this.connections = temp
+        let invalidMessage = document.querySelector('.invalid')
+        if (invalidMessage) {
+          invalidMessage.style.display = 'none'
+        }
+      } else {
+        this.connections = []
+        this.notFound = true
+      }
+      console.log(this.connections)
     },
     departDateSelect (event) {
-      console.log(event)
       this.selectedDepartDate = this.departDate
+      this.isDepartSelected = true
     },
     arriveDateSelect (event) {
-      console.log(event)
       this.selectedArriveDate = this.arriveDate
+      this.isArriveSelected = true
+      let singleFlight = document.querySelector('.single-flight')
+      singleFlight.style.display = 'none'
+    },
+    confirmSingle (event) {
+      console.log('single confirmed')
+      // confirm-single-btn
+      this.showSingleFlights = true
+      this.isActive = true
+    },
+    confirmReturn (event) {
+      console.log('return confirmed')
+      this.showReturnFlights = true
+      this.isActive = true
+    },
+    moment: function () {
+      return moment()
+    }
+  },
+  filters: {
+    moment: function (arriveDate, departDate) {
+      return moment(arriveDate, departDate).format('YYYY-MM-DD')
     }
   }
 }
 </script>
 <style scoped>
-  li{
+  @media screen and (max-width: 767px) {
+    .select-group{
+      flex-direction: column;
+    }
+  }
+  .select-group{
+    width: 75%;
+    margin: 0 auto;
+  }
+  .select-wrapper{
+    display: flex;
+    flex-direction: row;
+    align-items: space-between;
+    justify-content: space-evenly;
+    align-items: center;
+    border: 1px solid #79f7af;
+    border-radius: 8px;
+    padding: 15px;
+  }
+  .active{
+    transform: scale(0.9);
+    transition: all .4s ease-in-out;
+  }
+  h1{
+    font-size: 1.6rem;
+  }
+  h2{
     display: inline-block;
-    margin: 0 10px;
+    font-weight: bold;
+    color: #737f8a;
+    font-size: .8rem;
+  }
+  h3{
+    font-size: 1.4rem;
+  }
+  h4{
+    font-size: 1.26;
+  }
+  .flight-select{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-items: center;
+  }
+  .datetime{
+    display: flex;
+    flex-direction: column;
+  }
+  .selected-message{
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    align-items: flex-start;
+    text-align: left;
+    transform: scale(0.9);
+  }
+  /* .single-flight h3{
+    margin-top: 1.4rem;
+  } */
+  .return-flight{
+    max-width: 280px;
   }
   select{
+    max-width: 350px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    color: #555;
+  }
+  option{
+    background-color: white;
+  }
+  .message{
+    display: block;
+    margin: 0 auto;
+  }
+  input{
     width: 50%;
-    display: inline-block;
+    display: block;
+  }
+  .invalid{
+    color: rgb(248, 114, 114);
+  }
+  .mx-input-wrapper{
+    margin: 15px 0;
+  }
+  button {
+    margin-top: 15px;
+    display: block;
+    color: seagreen;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  button:hover{
+    border: 1px solid #49e78d;
+    background-color: #49e78d;
+    color: white;
+  }
+  time{
+    display: block;
+    font-weight: 600;
   }
 </style>

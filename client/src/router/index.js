@@ -4,6 +4,7 @@ import Select from '@/components/Select'
 import DatePicker from 'vue2-datepicker'
 
 Vue.use(Router)
+
 export default new Router({
   routes: [
     {
