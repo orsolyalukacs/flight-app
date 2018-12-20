@@ -23,11 +23,11 @@
 
       <section class="selected-message" v-bind:class="{ active: isActive}">
       <div class="single-flight" v-if="depart&&arrive&&departDate">
-        You selected a flight from: <h3>{{ depart }} </h3> to <h3>{{ arrive }}</h3> on <time> {{ departDate | moment }}.</time>
+        You selected a one-way flight from: <h3>{{ depart }} </h3> to <h3>{{ arrive }}</h3> on <time> {{ departDate | moment }}.</time>
         <button type="button" id="confirm-single-btn" class="mx-datepicker-btn mx-datepicker-btn-confirm" @click="confirmSingle($event)">OK</button>
       </div>
       <div class="return-flight" v-if="depart&&arrive&&departDate&&arriveDate">
-          Your selected flights are the following: from <h3> {{ depart }} </h3> to <h3> {{ arrive }} </h3> on <time> {{ departDate | moment }} </time> and returning on the <time> {{ arriveDate | moment }}. </time>
+          You selected a return fligh from: <h3> {{ depart }} </h3> to <h3> {{ arrive }} </h3> on <time> {{ departDate | moment }} </time> and returning on the <time> {{ arriveDate | moment }}. </time>
           <button type="button" id="confirm-return-btn" class="mx-datepicker-btn mx-datepicker-btn-confirm" @click="confirmReturn($event)">OK</button>
       </div>
       </section>
@@ -35,24 +35,35 @@
     <section v-if="showReturnFlights">
       <h3>showReturnFlights</h3>
     </section>
-    <section v-if="showSingleFlights">
-      <h3>showSingleFlights</h3>
+     <section class="show-flights" v-if="showSingleFlights && SearchResults">
+      <p>The following one-way flights are going on the selected dates: </p>
+      <ul>
+        <li class="show-single-flight" :key="flight.flightNumber.id" v-for="flight in flights">
+          {{ flight.departure | day }}
+           <strong>  {{ flight.departure | minuteTime }}→
+          <span>{{ flight.arrival | minuteTime }}</span></strong>
+          <button id="select-flight" class="mx-datepicker-btn mx-datepicker-btn" type="button"> Select </button>
+        </li>
+       </ul>
     </section>
+    <!-- <flights @interface="search" v-if="showSingleFlights && SearchResults" :flights:="this.flights" /> -->
   </main>
 </template>
 <script>
 import axios from 'axios'
 import DatePicker from 'vue2-datepicker'
 import moment from 'moment'
+import Flights from '@/components/Flights'
 
 export default {
-  components: { DatePicker },
+  components: { DatePicker, Flights },
   name: 'Select',
   data () {
     return {
       stations: [],
       departList: [],
       connections: [],
+      flights: [],
       depart: [],
       arrive: [],
       departDate: '',
@@ -63,7 +74,11 @@ export default {
       shortNameLUT: {},
       iataLUT: {},
       notFound: '',
-      isActive: false
+      isActive: false,
+      showSingleFlights: false,
+      showReturnFlights: false,
+      SearchResults: '',
+      remainingTickets: ''
     }
   },
   mounted () {
@@ -106,11 +121,8 @@ export default {
       localStorage.clear()
       let vm = this
       var temp = this.stations[this.shortNameLUT[this.depart]].connections
-      // console.log(temp)
       temp = temp.map((elem) => elem.iata)
-      // console.log(temp)
       temp = temp.map((elem) => vm.stations[vm.iataLUT[elem]])
-      // console.log(temp)
       if (temp[0] !== undefined) {
         this.connections = temp
         let invalidMessage = document.querySelector('.invalid')
@@ -121,7 +133,6 @@ export default {
         this.connections = []
         this.notFound = true
       }
-      console.log(this.connections)
     },
     departDateSelect (event) {
       this.selectedDepartDate = this.departDate
@@ -133,24 +144,51 @@ export default {
       let singleFlight = document.querySelector('.single-flight')
       singleFlight.style.display = 'none'
     },
+    search () {
+      console.log('searching')
+      let vm = this
+      let indexOfDepart = this.shortNameLUT[this.depart]
+      let iataDepart = this.stations[indexOfDepart].iata
+      let indexOfArrive = this.shortNameLUT[this.arrive]
+      let iataArrive = this.stations[indexOfArrive].iata
+      let FlightDepartDate = moment(this.departDate).format('YYYY-MM-DD')
+      // let FlightArrivalDate = moment(this.arriveDate).format('YYYY-MM-DD')
+
+      let SingleUrl = 'https://mock-air.herokuapp.com/search?departureStation=' + iataDepart + '&arrivalStation=' + iataArrive + '&date=' + FlightDepartDate
+      axios.get(SingleUrl)
+        .then(response => {
+          vm.flights = response.data
+          console.log(vm.flights)
+          console.log(vm.flights[0].remainingTickets)
+        })
+      this.SearchResults = true
+    },
     confirmSingle (event) {
       console.log('single confirmed')
-      // confirm-single-btn
       this.showSingleFlights = true
       this.isActive = true
+      this.search()
     },
     confirmReturn (event) {
       console.log('return confirmed')
+      this.showSingleFlights = false
       this.showReturnFlights = true
       this.isActive = true
+      this.search()
     },
     moment: function () {
       return moment()
     }
   },
   filters: {
-    moment: function (arriveDate, departDate) {
-      return moment(arriveDate, departDate).format('YYYY-MM-DD')
+    moment: function (arriveDate) {
+      return moment(arriveDate).format('YYYY-MM-DD')
+    },
+    day: function (arriveDate) {
+      return moment(arriveDate).format('ddd, MMM Do YYYY')
+    },
+    minuteTime: function (departDate) {
+      return moment(departDate).format('hh:mm')
     }
   }
 }
@@ -193,6 +231,8 @@ export default {
   }
   h4{
     font-size: 1.26;
+    text-align: left;
+    max-width: 300px;
   }
   .flight-select{
     display: flex;
@@ -212,9 +252,6 @@ export default {
     text-align: left;
     transform: scale(0.9);
   }
-  /* .single-flight h3{
-    margin-top: 1.4rem;
-  } */
   .return-flight{
     max-width: 280px;
   }
@@ -254,7 +291,27 @@ export default {
     color: white;
   }
   time{
-    display: block;
     font-weight: 600;
+  }
+  #select-flight{
+    display: inline;
+  }
+  li{
+    list-style: none;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  li:nth-child(odd){
+    background-color: #efefef;
+  }
+  li strong{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', Verdana, sans-serif
+  }
+  button#select-flight{
+    margin-top: 0;
+    color: #2c3e50;
+    background-color: white;
+    font-weight: 400;
+    font-size: 16px;
   }
 </style>
