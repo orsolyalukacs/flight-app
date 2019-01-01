@@ -2,13 +2,14 @@
 <template>
   <main class="select-group">
     <div class="select-wrapper" v-bind:class="{ active: isActive}">
+      <!--Select -->
       <section class="flight-select">
         <h1>Flights</h1>
-        <h2>Departure station</h2>
+        <h2>Flight from</h2>
         <select id="depart" v-model="depart" @change="update($event)">
           <option placeholder="departure" :key='station.shortName.id' v-for="station in stations" :value="station.shortName">{{ station.shortName }}</option>
         </select>
-        <h2>Arrival station</h2>
+        <h2>Flight to</h2>
         <select id="arrive" v-model="arrive">
           <option :key='connection.shortName.id' v-for="connection in connections" :value="connection.shortName">{{ connection.shortName }}</option>
         </select>
@@ -20,33 +21,78 @@
           <date-picker @change="arriveDateSelect($event)" lang="en" v-model="arriveDate" confirm :not-before="selectedDepartDate"></date-picker>
         </div>
       </section>
-
       <section class="selected-message" v-bind:class="{ active: isActive}">
-      <div class="single-flight" v-if="depart&&arrive&&departDate">
-        You selected a one-way flight from: <h3>{{ depart }} </h3> to <h3>{{ arrive }}</h3> on <time> {{ departDate | moment }}.</time>
-        <button type="button" id="confirm-single-btn" class="mx-datepicker-btn mx-datepicker-btn-confirm" @click="confirmSingle($event)">OK</button>
+        <!-- Search Single Flights -->
+      <div class="single-flight" v-if="depart && arrive && departDate">
+        <!-- You selected a one-way flight from: <h3>{{ depart }} </h3> to <h3>{{ arrive }}</h3> on <time> {{ departDate | moment }} </time> -->
+        <button type="button" id="confirm-single-btn" class="mx-datepicker-btn mx-datepicker-btn-confirm" @click="confirmSingle($event)">Search one-way flight</button>
       </div>
-      <div class="return-flight" v-if="depart&&arrive&&departDate&&arriveDate">
-          You selected a return fligh from: <h3> {{ depart }} </h3> to <h3> {{ arrive }} </h3> on <time> {{ departDate | moment }} </time> and returning on the <time> {{ arriveDate | moment }}. </time>
-          <button type="button" id="confirm-return-btn" class="mx-datepicker-btn mx-datepicker-btn-confirm" @click="confirmReturn($event)">OK</button>
+        <!-- Search Return Flights -->
+      <div class="return-flight" v-if="depart && arrive && departDate && arriveDate">
+          <!-- You selected a return flight from: <h3> {{ depart }} </h3> to <h3> {{ arrive }} </h3> on <time> {{ departDate | moment }} </time> and returning on the <time> {{ arriveDate | moment }} </time> -->
+          <button type="button" id="confirm-return-btn" class="mx-datepicker-btn mx-datepicker-btn-confirm" @click="confirmReturn($event)">Search return flights</button>
       </div>
       </section>
     </div>
-    <section v-if="showReturnFlights">
-      <h3>showReturnFlights</h3>
-    </section>
-     <section class="show-flights" v-if="showSingleFlights && SearchResults">
+    <!-- Show Single Flights -->
+     <section class="show-flights" v-if="showSingleFlights && SearchResults && !isSelected">
       <p>The following one-way flights are going on the selected dates: </p>
+      <div><p><strong class="stations">{{ depart }}<span class="arrow">→</span>{{ arrive }}</strong></p></div>
       <ul>
         <li class="show-single-flight" :key="flight.flightNumber.id" v-for="flight in flights">
-          {{ flight.departure | day }}
-           <strong>  {{ flight.departure | minuteTime }}→
-          <span>{{ flight.arrival | minuteTime }}</span></strong>
-          <button id="select-flight" class="mx-datepicker-btn mx-datepicker-btn" type="button"> Select </button>
+          <time class="day">{{ flight.departure | day }}</time>
+           <strong>{{ flight.departure | minuteTime }} →
+          <time>{{ flight.arrival | minuteTime }}</time></strong>
+          <button v-if="flight.remainingTickets > 0" id="select-flight" @click="SelectFlight($event)" class="mx-datepicker-btn mx-datepicker-btn" type="button"> Select </button>
         </li>
        </ul>
     </section>
-    <!-- <flights @interface="search" v-if="showSingleFlights && SearchResults" :flights:="this.flights" /> -->
+    <!-- Show Return Flights -->
+    <section class="show-flights" v-if="showReturnFlights && SearchResults && !isSelected">
+      <p>The following return flights are going on the selected dates: </p>
+      <div><p><strong class="stations">{{ depart }}<span class="arrow">→</span>{{ arrive }}</strong></p></div>
+      <ul>
+        <li class="show-single-flight" :key="flight.flightNumber.id" v-for="flight in flights">
+          <time class="day">{{ flight.departure | day }}</time>
+            <strong>{{ flight.departure | minuteTime }} →
+          <time>{{ flight.arrival | minuteTime }}</time></strong>
+          <button v-if="flight.remainingTickets > 0" id="select-flight" @click="SelectFlight($event)" class="mx-datepicker-btn mx-datepicker-btn" type="button"> Select </button>
+        </li>
+      </ul>
+      <p><strong class="stations">{{ arrive }}<span class="arrow">→</span>{{ depart }}</strong></p>
+      <ul>
+        <li class="show-return-flight" :key="flight.flightNumber.id" v-for="flight in returnFlights">
+          <time class="day">{{ flight.arrival | day }}</time>
+          <strong>  {{ flight.departure | minuteTime }} →
+          <time>{{ flight.arrival | minuteTime }}</time></strong>
+          <button v-if="flight.remainingTickets > 0" id="select-flight" @click="SelectFlight($event)" class="mx-datepicker-btn mx-datepicker-btn" type="button"> Select </button>
+        </li>
+      </ul>
+    </section>
+    <!-- No flights found -->
+    <section v-if="!SearchResults && isSelected">
+      <p class="invalid">There are no remaining tickets on the selected dates.</p>
+    </section>
+     <section v-if="SearchResults && !ReturnSearchResults && isSelected">
+      <p class="invalid">There are no return flights available on this date.</p>
+    </section>
+    <!-- Categories -->
+    <section class="show-categories" v-if="isSelected">
+      <h4>Available flights:</h4>
+      <ul>
+        <li class="show-selected-flights">
+          <span>category</span>
+          <span>price</span>
+        </li>
+        <li class="show-selected-flights" :key="fare.id" v-for="fare in fares">
+          <!-- <button> -->
+            <span>{{ fare.bundle }}
+            </span>
+            <span>{{ fare.price }} €</span>
+          <!-- </button> -->
+        </li>
+       </ul>
+    </section>
   </main>
 </template>
 <script>
@@ -64,6 +110,7 @@ export default {
       departList: [],
       connections: [],
       flights: [],
+      fares: [],
       depart: [],
       arrive: [],
       departDate: '',
@@ -78,7 +125,11 @@ export default {
       showSingleFlights: false,
       showReturnFlights: false,
       SearchResults: '',
-      remainingTickets: ''
+      remainingTickets: '',
+      isSelected: '',
+      chosenType: false,
+      returnFlights: [],
+      ReturnSearchResults: false
     }
   },
   mounted () {
@@ -159,9 +210,28 @@ export default {
         .then(response => {
           vm.flights = response.data
           console.log(vm.flights)
-          console.log(vm.flights[0].remainingTickets)
+          // console.log(vm.flights[0].remainingTickets)
         })
       this.SearchResults = true
+    },
+    searchReturn () {
+      console.log('searching return')
+      let vm = this
+      let indexOfArrive = this.shortNameLUT[this.arrive]
+      let iataArrive = this.stations[indexOfArrive].iata
+      let indexOfDepart = this.shortNameLUT[this.depart]
+      let iataDepart = this.stations[indexOfDepart].iata
+      let FlightArriveDate = moment(this.arriveDate).format('YYYY-MM-DD')
+      // let FlightArrivalDate = moment(this.arriveDate).format('YYYY-MM-DD')
+
+      let returnUrl = 'https://mock-air.herokuapp.com/search?departureStation=' + iataArrive + '&arrivalStation=' + iataDepart + '&date=' + FlightArriveDate
+      axios.get(returnUrl)
+        .then(response => {
+          vm.returnFlights = response.data
+          console.log(vm.returnFlights)
+          // console.log(vm.flights[0].remainingTickets)
+        })
+      this.ReturnSearchResults = true
     },
     confirmSingle (event) {
       console.log('single confirmed')
@@ -175,9 +245,17 @@ export default {
       this.showReturnFlights = true
       this.isActive = true
       this.search()
+      this.searchReturn()
     },
     moment: function () {
       return moment()
+    },
+    SelectFlight (event) {
+      console.log('selected')
+      console.log(this.flights)
+      this.fares = this.flights[0].fares
+      console.log(this.fares)
+      this.isSelected = true
     }
   },
   filters: {
@@ -188,7 +266,7 @@ export default {
       return moment(arriveDate).format('ddd, MMM Do YYYY')
     },
     minuteTime: function (departDate) {
-      return moment(departDate).format('hh:mm')
+      return moment(departDate).format('HH:mm')
     }
   }
 }
@@ -231,7 +309,6 @@ export default {
   }
   h4{
     font-size: 1.26;
-    text-align: left;
     max-width: 300px;
   }
   .flight-select{
@@ -281,7 +358,7 @@ export default {
   button {
     margin-top: 15px;
     display: block;
-    color: seagreen;
+    color: rgb(70, 206, 129);
     font-weight: bold;
     font-size: 18px;
   }
@@ -299,19 +376,58 @@ export default {
   li{
     list-style: none;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
   }
   li:nth-child(odd){
     background-color: #efefef;
   }
   li strong{
-    font-family:'Lucida Sans', 'Lucida Sans Regular', Verdana, sans-serif
+    font-family:'Lucida Sans', 'Lucida Sans Regular', Verdana, sans-serif;
   }
   button#select-flight{
     margin-top: 0;
     color: #2c3e50;
     background-color: white;
-    font-weight: 400;
-    font-size: 16px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+  button#select-flight:hover{
+    border: 1px solid #49e78d;
+    background-color: #49e78d;
+    color: white;
+  }
+  .show-flights p{
+    font-family:'Lucida Sans', 'Lucida Sans Regular', Verdana, sans-serif;
+  }
+  .show-selected-flights{
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 50px;
+  }
+  .show-single-flight, .show-return-flight{
+    font-size: 14px;
+  }
+  li:first-child.show-selected-flights{
+    background-color: #94f1bd;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 600;
+    border: none;
+  }
+  .stations{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    font-size: 20px;
+    letter-spacing: 1px;
+    font-family: Helvetica Neue,Helvetica,Roboto,Arial,sans-serif;
+  }
+  .arrow{
+    color: #49e78d;
+    font-size: 28px;
+    padding: 0 10px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', Verdana, sans-serif;
   }
 </style>
