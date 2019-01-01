@@ -5,8 +5,15 @@
 </template>
 
 <script>
+import Select from './components/Select'
+import Flights from './components/Flights'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    Select,
+    Flights
+  }
 }
 </script>
 
