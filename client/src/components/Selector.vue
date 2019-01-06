@@ -6,7 +6,8 @@
       <option
         v-bind:key="item[itemKey]"
         v-for="item in items"
-        v-bind:value="itemValue=='' ? item : item[itemValue]">{{item[displayedName]}}
+        v-bind:value="itemValue=='' ? item : item[itemValue]">
+        {{item[displayedName]}}
       </option>
     </select>
   </section>
@@ -79,19 +80,20 @@ export default {
   }
   button:hover{
     border: 1px solid #261394;
-    background-color: #f1f1f1;
+    /* background-color: #f1f1f1; */
     color: #261394;
   }
   select{
-    min-width: 160px;
+    width: 100%;
+    max-width: 160px;
     border: 1px solid #ccc;
     color: #555;
-    background-color: #f1f1f1;
+    background-color:white;
     height: 34px;
     border-radius: 4px;
   }
   option{
-    background-color: #f1f1f1;
+    background-color: white;
   }
   input{
     width: 50%;
@@ -107,14 +109,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 100%;
-  }
-  .flight-select-wrapper{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 1.2rem;
-    justify-content: space-between;
-    width: 100%;
+    min-width: 160px;
+    padding-right: 20px;
   }
 </style>

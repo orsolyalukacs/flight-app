@@ -10,7 +10,8 @@
       :buttonName="buttonNames"
       :buttonValue="buttonValues"
       :buttonKey="buttonKeys"
-      :displayedName="displayedName"/>
+      :displayedName="displayedName"
+      :itemFormatter="itemFormatter"/>
   </section>
 </template>
 
@@ -82,6 +83,12 @@ export default {
     buttonKeys: {
       default: 'id',
       type: String
+    },
+    itemFormatter: {
+      default: function (item) {
+        return JSON.stringify(item)
+      },
+      type: Function
     }
   },
   methods: {
@@ -91,3 +98,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.list{
+  margin: 2rem auto;
+}
+</style>

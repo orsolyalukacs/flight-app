@@ -1,36 +1,38 @@
  <template>
   <main id="root">
-    <section class="select-wrapper">
-      <div class="flight-select-wrapper">
-        <Selector
-          v-model="currentDepart"
-          :items="stations"
-          placeholder="Select departure"
-          displayedName="shortName"
-          itemValue=""
-          title="Flight from"/>
-        <Selector
-          v-model="currentArrive"
-          :items="connectingStations"
-          placeholder="Select arrival"
-          displayedName="shortName"
-          itemValue=""
-          title="Flight to"/>
+    <section class="select-group">
+      <div class="select-wrapper">
+        <div class="flight-select-wrapper">
+          <Selector
+            v-model="currentDepart"
+            :items="stations"
+            placeholder="Select departure"
+            displayedName="shortName"
+            itemValue=""
+            title="Flight from"/>
+          <Selector
+            v-model="currentArrive"
+            :items="connectingStations"
+            placeholder="Select arrival"
+            displayedName="shortName"
+            itemValue=""
+            title="Flight to"/>
+        </div>
+        <time class="datetime">
+          <date-picker
+            lang="en"
+            v-model="departDate"
+            confirm :not-before="new Date()"
+            :not-after="returnDate"
+            title="depart date"/>
+          <date-picker
+            lang="en"
+            confirm
+            :not-before="departDate"
+            v-model="returnDate"
+            title="return date"/>
+        </time>
       </div>
-      <time class="datetime">
-        <date-picker
-          lang="en"
-          v-model="departDate"
-          confirm :not-before="new Date()"
-          :not-after="returnDate"
-          title="depart date"/>
-        <date-picker
-          lang="en"
-          confirm
-          :not-before="departDate"
-          v-model="returnDate"
-          title="return date"/>
-      </time>
       <button @click="searchFlights" :disabled="!formValid">
         {{searchButtonText}}
       </button>
@@ -42,7 +44,9 @@
       buttons="fares"
       buttonNames="bundle"
       buttonValues="price"
-      title="Departing flights"/>
+      title="Departing flights"
+      :itemFormatter="itemFormatter"
+      v-if="searchResults"/>
     <List
       :items="returnListItems"
       displayedName="departure"
@@ -50,10 +54,13 @@
       buttons="fares"
       buttonNames="bundle"
       buttonValues="price"
-      title="Return flights"/>
+      title="Return flights"
+      :itemFormatter="itemFormatter"
+      v-if="returnSearchResults"/>
     <Summary
       :data="summaryData"
-      :textFormatter="textFormatter"/>
+      :textFormatter="textFormatter"
+      v-if="summaryResults"/>
   </main>
 </template>
 
@@ -62,7 +69,7 @@ import Selector from './components/Selector'
 import List from './components/List'
 import Summary from './components/Summary'
 import { getStations, getFlights } from './services/apiCalls'
-import { getConnectedStations, summaryTextFormatter } from './services/dataManipulation'
+import { getConnectedStations, summaryTextFormatter, itemTextFormatter } from './services/dataManipulation'
 import DatePicker from 'vue2-datepicker'
 
 export default {
@@ -85,11 +92,15 @@ export default {
       returnDate: '',
       departTicket: {},
       returnTicket: {},
+      searchResults: false,
+      returnSearchResults: false,
+      summaryResults: false,
       summaryData: {
         departTicket: {},
         returnTicket: {}
       },
-      textFormatter: summaryTextFormatter
+      textFormatter: summaryTextFormatter,
+      itemFormatter: itemTextFormatter
     }
   },
   created () {
@@ -113,14 +124,18 @@ export default {
       if (this.departDate) {
         getFlights(vm.currentDepart, vm.currentArrive, vm.departDate)
           .then(data => { vm.departListItems = data })
+        this.searchResults = true
       } else {
         vm.departListItems = []
+        this.searchResults = false
       }
       if (this.returnDate) {
         getFlights(vm.currentArrive, vm.currentDepart, vm.returnDate)
           .then(data => { vm.returnListItems = data })
+        this.returnSearchResults = true
       } else {
         vm.returnListItems = []
+        this.returnSearchResults = false
       }
     },
     rowSelected: function (direction, fare, bundle, price) {
@@ -130,6 +145,7 @@ export default {
         price: price
       }
       console.log(this.summaryData)
+      this.summaryResults = true
     }
   },
   computed: {
@@ -143,7 +159,7 @@ export default {
       }
     },
     formValid: function () {
-      if (this.currentDepart && this.currentArrive && this.depart) {
+      if (this.currentDepart && this.currentArrive && this.departDate) {
         return true
       } else {
         return false
@@ -179,17 +195,22 @@ button{
   padding: 7px 15px;
   margin: 0 5px;
   cursor: pointer;
-  background-color: transparent;
+  background-color: white;
+  border-color: #2ECEDA;
   outline: none;
   border-radius: 4px;
+}
+.select-group{
+  border: 1px solid #2ECEDA;
+  padding: 20px 0;
+  background-color: #f1f1f1;
+  margin-top: 50px;
 }
 .select-wrapper{
   display: flex;
   flex-direction: column;
-  align-items: space-between;
   justify-content: space-evenly;
-  align-items: center;
-  border: 1px solid #2ECEDA;
+  align-items: flex-start;
   padding: 15px;
 }
 .flight-select-wrapper{
@@ -197,27 +218,30 @@ button{
   flex-direction: row;
   align-items: center;
   margin-bottom: 1.2rem;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
 }
 .datetime{
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  align-items: flex-start;
+  justify-content: center;
   width: 100%;
 }
 .active {
   display: block;
 }
 .mx-datepicker{
-  width: 160px;
+  max-width: 160px;
+  width: 100%;
+  align-items: flex-start;
+  padding-right: 15px;
 }
 .mx-datepicker-button{
   margin: 0 20px;
 }
 input.mx-input{
-  background-color: #f1f1f1;
-  width: 160px;
+  background-color: white;
 }
 .mx-calendar-content .cell.actived{
   background-color: #2ECEDA;
