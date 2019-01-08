@@ -220,9 +220,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
   width: 70%;
-  margin: 0 auto;
+  margin: 60px auto;
 }
 button{
   font-size: 12px;
@@ -287,9 +286,9 @@ input.mx-input{
   color: rgb(248, 114, 114);
 }
 .choose-return{
-  margin-top: 10px;
+  margin: 10px auto;
 }
 .active{
-  border:1px solid rgb(248, 114, 114);
+  border:2px solid rgb(248, 114, 114);
 }
 </style>
