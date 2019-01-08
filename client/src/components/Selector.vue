@@ -38,6 +38,11 @@ export default {
     initialSelection: {
       default: ''
     },
+    value: {
+      default: function () {
+        return {}
+      }
+    },
     displayedName: {
       default: 'name',
       type: String
@@ -63,6 +68,11 @@ export default {
   methods: {
     onChange () {
       this.$emit('input', this.selected)
+    }
+  },
+  watch: {
+    value: function () {
+      this.selected = this.value
     }
   }
 }

@@ -4,15 +4,15 @@
       <div class="select-wrapper">
         <div class="flight-select-wrapper">
           <Selector
-            v-model="currentDepart"
             :items="stations"
+            v-model="currentDepart"
             placeholder="Select departure"
             displayedName="shortName"
             itemValue=""
             title="Flight from"/>
           <Selector
-            v-model="currentArrive"
             :items="connectingStations"
+            v-model="currentArrive"
             placeholder="Select arrival"
             displayedName="shortName"
             itemValue=""
@@ -103,22 +103,34 @@ export default {
       itemFormatter: itemTextFormatter
     }
   },
-  created () {
-    let vm = this
-    getStations().then(data => {
-      vm.stations = data
-    })
+  mounted () {
+    if (localStorage.stations) {
+      this.stations = JSON.parse(localStorage.stations)
+    } else {
+      let here = this
+      getStations().then(data => {
+        here.stations = data
+      })
+    }
+    if (localStorage.currentDepart) {
+      this.currentDepart = JSON.parse(localStorage.currentDepart)
+    }
+    if (localStorage.currentArrive) {
+      this.currentArrive = JSON.parse(localStorage.currentArrive)
+    }
+    if (localStorage.connectingStations) {
+      this.connectingStations = JSON.parse(localStorage.connectingStations)
+    }
   },
   methods: {
-    departChanged: function (value) {
-      this.connectingStations = getConnectedStations(value, this.stations)
-      this.currentDepart = value
-    },
-    arriveChanged: function (value) {
-      this.currentArrive = value
-      console.log(this.currentDepart)
-      console.log(this.currentArrive)
-    },
+    // departChanged: function (value) {
+    //   this.connectingStations = getConnectedStations(value, this.stations)
+    //   this.currentDepart = value
+    //   // localStorage.clear()
+    // },
+    // arriveChanged: function (value) {
+    //   this.currentArrive = value
+    // },
     searchFlights: function () {
       let vm = this
       if (this.departDate) {
@@ -144,8 +156,10 @@ export default {
         bundle: bundle,
         price: price
       }
-      console.log(this.summaryData)
       this.summaryResults = true
+    },
+    asd: function () {
+      this.currentDepart = this.stations[6]
     }
   },
   computed: {
@@ -167,13 +181,21 @@ export default {
     }
   },
   watch: {
-    currentDepart: function (value) {
-      this.connectingStations = getConnectedStations(value, this.stations)
+    stations: function () {
+      localStorage.stations = JSON.stringify(this.stations)
+    },
+    currentDepart: function () {
+      this.connectingStations = getConnectedStations(this.currentDepart, this.stations)
+      localStorage.currentDepart = JSON.stringify(this.currentDepart)
+    },
+    currentArrive: function () {
+      localStorage.currentArrive = JSON.stringify(this.currentArrive)
     },
     connectingStations: function (value) {
       if (!value.map(elem => { return elem.iata }).includes(this.currentArrive.iata)) {
         this.currentArrive = ''
       }
+      localStorage.connectingStations = JSON.stringify(this.connectingStations)
     }
   }
 }
