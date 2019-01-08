@@ -7,19 +7,6 @@ export function mapStationsToIata (stations) {
   return stations.map(elem => elem.iata)
 }
 
-export function summaryTextFormatter (data) {
-  var string = ''
-  if (data.departTicket) {
-    string = string + 'You selected a ' + data.departTicket.bundle + ' ticket: ' +
-    data.departTicket.price + '€ '
-  }
-  if (data.returnTicket) {
-    string = string + 'and a return ' + data.returnTicket.bundle + ' ticket: ' +
-    data.returnTicket.price + '€'
-  }
-  return string
-}
-
 export function itemTextFormatter (item) {
   var departTime = item.departure.split('T')[1].split('+')[0]
   var arriveTime = item.arrival.split('T')[1].split('+')[0]

@@ -27,16 +27,21 @@
             title="depart date"/>
           <date-picker
             lang="en"
+            id="return-date"
+            v-bind:class="{ active: isActive}"
             confirm
             :not-before="departDate"
             v-model="returnDate"
             title="return date"/>
         </time>
       </div>
-      <button @click="searchFlights" :disabled="!formValid">
+      <button v-if="formValid" @click="searchFlights" :disabled="!formValid">
         {{searchButtonText}}
       </button>
     </section>
+    <p class="invalid" v-if="!formValid && searched">
+      Error with the form. Please select both departing and arriving station and
+      at least a departing date.</p>
     <List
       :items="departListItems"
       displayedName="departure"
@@ -49,6 +54,9 @@
       v-if="searchResults"/>
       <p class="invalid" v-if="!searchResults && departDate && searched">
         There are no flights available on the selected date.</p>
+    <button class="choose-return" v-if="searched && !returnDate &&!returnSearchResults" @click="chooseReturn">
+      Choose return flight
+    </button>
     <List
       :items="returnListItems"
       displayedName="departure"
@@ -64,7 +72,6 @@
         There are no return flights available on the selected date.</p>
     <Summary
       :data="summaryData"
-      :textFormatter="textFormatter"
       v-if="summaryResults"/>
   </main>
 </template>
@@ -74,7 +81,7 @@ import Selector from './components/Selector'
 import List from './components/List'
 import Summary from './components/Summary'
 import { getStations, getFlights } from './services/apiCalls'
-import { getConnectedStations, summaryTextFormatter, itemTextFormatter } from './services/dataManipulation'
+import { getConnectedStations, itemTextFormatter } from './services/dataManipulation'
 import DatePicker from 'vue2-datepicker'
 
 export default {
@@ -101,11 +108,11 @@ export default {
       returnSearchResults: false,
       summaryResults: false,
       searched: false,
+      isActive: false,
       summaryData: {
         departTicket: {},
         returnTicket: {}
       },
-      textFormatter: summaryTextFormatter,
       itemFormatter: itemTextFormatter
     }
   },
@@ -129,14 +136,6 @@ export default {
     }
   },
   methods: {
-    // departChanged: function (value) {
-    //   this.connectingStations = getConnectedStations(value, this.stations)
-    //   this.currentDepart = value
-    //   // localStorage.clear()
-    // },
-    // arriveChanged: function (value) {
-    //   this.currentArrive = value
-    // },
     searchFlights: function () {
       let vm = this
       this.searched = true
@@ -152,10 +151,14 @@ export default {
         getFlights(vm.currentArrive, vm.currentDepart, vm.returnDate)
           .then(data => { vm.returnListItems = data })
         this.returnSearchResults = true
+        this.isActive = false
       } else {
         vm.returnListItems = []
         this.returnSearchResults = false
       }
+      this.summaryData.departTicket = {}
+      this.summaryData.returnTicket = {}
+      this.summaryResults = false
     },
     rowSelected: function (direction, fare, bundle, price) {
       this.summaryData[direction] = {
@@ -167,6 +170,9 @@ export default {
     },
     asd: function () {
       this.currentDepart = this.stations[6]
+    },
+    chooseReturn: function () {
+      this.isActive = true
     }
   },
   computed: {
@@ -277,6 +283,13 @@ input.mx-input{
 }
 .invalid{
   margin-top: 10px;
+  font-size: 12px;
   color: rgb(248, 114, 114);
+}
+.choose-return{
+  margin-top: 10px;
+}
+.active{
+  border:1px solid rgb(248, 114, 114);
 }
 </style>

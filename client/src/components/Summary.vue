@@ -1,12 +1,12 @@
 <template>
-  <section class="summary" @click="click">
+  <section class="summary">
     <div class="summary-text">
-        <!-- {{textFormatter(data)}} -->
       <div class="depart-ticket" v-if="data.departTicket">
         You selected:<br> a {{ data.departTicket.bundle }} ticket for {{ data.departTicket.price }} €
       </div>
       <p>
         from <strong>{{$vnode.context.currentDepart.shortName}}</strong>
+        to <strong>{{$vnode.context.currentArrive.shortName}}</strong><br>
         on {{$vnode.context.departDate.toISOString().split('T')[0]}} <br>
       </p>
       <p class="return-ticket" v-if="data.returnTicket.price">
@@ -18,10 +18,10 @@
     </div>
     <div class="totalsum">
         <h4>Total price:
-            <span v-if="data.departTicket &&!data.returnTicket">
-                {{this.data.departTicket.price}} €
+            <span v-if="data.departTicket.price && !data.returnTicket.price">
+                {{data.departTicket.price}} €
             </span>
-            <span v-else-if="data.departTicket && data.returnTicket">
+            <span v-else-if="data.departTicket.price && data.returnTicket.price">
                 {{data.returnTicket.price + data.departTicket.price }} €
             </span>
         </h4>
@@ -38,20 +38,6 @@ export default {
         return {}
       },
       type: Object
-    },
-    textFormatter: {
-      default: function (data) {
-        return data
-      },
-      type: Function
-    }
-  },
-  methods: {
-    click: function () {
-      console.log(this)
-      console.log(this.textFormatter(this.data))
-      console.log(this.$vnode.context.currentDepart.shortName)
-      console.log(this.$vnode.context.returnDate)
     }
   }
 }

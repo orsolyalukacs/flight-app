@@ -2,14 +2,14 @@
   <section class="selectable-row">
     <div class="row-wrapper">
         <time class="selectable-body">
-            <!-- {{departTime | minuteTime}} - {{arriveTime | minuteTime}} -->
             {{itemFormatter(rowItem)}}
         </time>
         <button class="fares"
         v-bind:key="button.id"
         v-for="button in buttons"
+        v-if="rowItem.remainingTickets > 0"
         @click="buttonClicked(button[buttonName], button[buttonValue])">
-            {{button[buttonName]}} - {{button[buttonValue]}}€
+            {{button[buttonName]}} - {{button[buttonValue]}} €
         </button>
     </div>
   </section>
@@ -100,5 +100,9 @@ export default {
   }
   .selectble-row{
       line-height: 2;
+  }
+  .toggled{
+    background-color: #30C6DC;
+    color: white;
   }
 </style>
