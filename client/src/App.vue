@@ -47,6 +47,8 @@
       title="Departing flights"
       :itemFormatter="itemFormatter"
       v-if="searchResults"/>
+      <p class="invalid" v-if="!searchResults && departDate && searched">
+        There are no flights available on the selected date.</p>
     <List
       :items="returnListItems"
       displayedName="departure"
@@ -56,7 +58,10 @@
       buttonValues="price"
       title="Return flights"
       :itemFormatter="itemFormatter"
-      v-if="returnSearchResults"/>
+      v-if="searched && returnSearchResults"
+      />
+      <p class="invalid" v-if="!returnSearchResults && returnDate && searched">
+        There are no return flights available on the selected date.</p>
     <Summary
       :data="summaryData"
       :textFormatter="textFormatter"
@@ -95,6 +100,7 @@ export default {
       searchResults: false,
       returnSearchResults: false,
       summaryResults: false,
+      searched: false,
       summaryData: {
         departTicket: {},
         returnTicket: {}
@@ -133,6 +139,7 @@ export default {
     // },
     searchFlights: function () {
       let vm = this
+      this.searched = true
       if (this.departDate) {
         getFlights(vm.currentDepart, vm.currentArrive, vm.departDate)
           .then(data => { vm.departListItems = data })
@@ -214,7 +221,7 @@ export default {
 button{
   font-size: 12px;
   line-height: 1;
-  padding: 7px 15px;
+  padding: 5px;
   margin: 0 5px;
   cursor: pointer;
   background-color: white;
@@ -267,5 +274,9 @@ input.mx-input{
 }
 .mx-calendar-content .cell.actived{
   background-color: #2ECEDA;
+}
+.invalid{
+  margin-top: 10px;
+  color: rgb(248, 114, 114);
 }
 </style>
