@@ -52,7 +52,10 @@
           buttons="fares"
           buttonNames="bundle"
           buttonValues="price"
+          buttonKeys="price"
+          itemKey="departure"
           title="Departing flights"
+          :isLoading="isLoading"
           :itemFormatter="itemFormatter"
           v-if="searchResults && searched"/>
         <List
@@ -62,7 +65,10 @@
           buttons="fares"
           buttonNames="bundle"
           buttonValues="price"
+          buttonKeys="price"
+          itemKey="departure"
           title="Return flights"
+          :isLoading="isReturnLoading"
           :itemFormatter="itemFormatter"
           v-if="returnSearchResults && searched"
           />
@@ -76,9 +82,11 @@
         Choose return flight
       </button>
     </div>
-    <p class="invalid" v-if="!searchResults && departDate && searched">
+    <p class="invalid" v-if="!searchResults && searched">
     There are no flights available on the selected date.</p>
-    <p class="invalid" v-if="!returnSearchResults && returnDate && !returnValid">
+    <p class="invalid" v-if="!returnSearchResults && returnDate && searched">
+    There are no flights available on the selected date.</p>
+    <p class="invalid" v-if="returnDate && !returnValid">
     There is an error with the form. Please select a departure and an arrival station
     and at least departing date.</p>
   </main>
@@ -121,7 +129,9 @@ export default {
         departTicket: {},
         returnTicket: {}
       },
-      itemFormatter: itemTextFormatter
+      itemFormatter: itemTextFormatter,
+      isLoading: false,
+      isReturnLoading: false
     }
   },
   mounted () {
@@ -148,17 +158,26 @@ export default {
       let vm = this
       this.searched = true
       if (this.departDate) {
+        this.searchResults = true
+        vm.isLoading = true
         getFlights(vm.currentDepart, vm.currentArrive, vm.departDate)
           .then(data => { vm.departListItems = data })
-        this.searchResults = true
+          .then(() => {
+            vm.isLoading = false
+          })
       } else {
         vm.departListItems = []
         this.searchResults = false
       }
       if (this.returnDate) {
+        this.returnSearchResults = true
+        vm.isReturnLoading = true
         getFlights(vm.currentArrive, vm.currentDepart, vm.returnDate)
           .then(data => { vm.returnListItems = data })
-        this.returnSearchResults = true
+          .then(() => {
+            vm.isReturnLoading = false
+          })
+        console.log(vm.returnListItems)
         this.isActive = false
       } else {
         vm.returnListItems = []
@@ -201,8 +220,7 @@ export default {
       }
     },
     returnValid: function () {
-      if (this.currentDepart && this.currentArrive &&
-      this.departDate && this.returnDate) {
+      if (this.formValid && this.returnDate) {
         return true
       } else {
         return false
@@ -230,6 +248,13 @@ export default {
 }
 </script>
 <style>
+body{
+  background-image: linear-gradient(#457fca, #5691c8 );
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center top;
+  background-attachment: fixed;
+}
 #root {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -242,18 +267,23 @@ export default {
 button{
   font-size: 12px;
   line-height: 1;
-  padding: 5px;
+  padding: 10px;
   margin: 0 5px;
   cursor: pointer;
-  background-color: white;
-  border-color: #2ECEDA;
+  background-color: #457FFB;
+  color: white;
+  border: none;
   outline: none;
   border-radius: 4px;
 }
+select{
+  border-color: transparent;
+  color:#150773;
+}
 .select-group{
-  border: 1px solid #2ECEDA;
   padding: 20px 0;
-  background-color: #f1f1f1;
+  background-color: rgba(255,255,255,0.6);
+;
   margin-top: 50px;
 }
 .select-wrapper{
@@ -292,17 +322,23 @@ button{
 }
 input.mx-input{
   background-color: white;
+  color:#150773;
+  border: none;
+  font-size: 12px;
 }
 .mx-calendar-content .cell.actived{
-  background-color: #2ECEDA;
+  background-color: #457FFB;
 }
 .invalid{
   margin-top: 10px;
   font-size: 12px;
-  color: rgb(248, 114, 114);
+  color: white;
+  text-align: left;
 }
 .choose-return{
   margin: 10px auto;
+  background-color: #150773;
+  color: white;
 }
 .active{
   border:2px solid rgb(248, 114, 114);
