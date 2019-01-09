@@ -5,26 +5,38 @@
             {{itemFormatter(rowItem)}}
         </time>
         <button class="fares"
-        v-bind:key="button.id"
+        v-bind:key="button[buttonKey]"
         v-for="button in buttons"
+        v-bind:class="{toggled: button[buttonKey] === activeKey
+        && rowItem[itemKey] === activeRow}"
         v-if="rowItem.remainingTickets > 0"
-        @click="buttonClicked(button[buttonName], button[buttonValue])">
-            {{button[buttonName]}} - {{button[buttonValue]}} €
+        @click="buttonClicked(button[buttonName], button[buttonValue],
+        button[buttonKey])">
+            <span class="ticket-type"><em>{{button[buttonName]}}</em></span>
+            <span class="ticket-price">{{button[buttonValue]}} €</span>
         </button>
     </div>
   </section>
 </template>
 
 <script>
-import moment from 'moment'
 export default {
   name: 'ListSelectableRow',
+  data () {
+    return {
+      activeKey: null
+    }
+  },
   props: {
     rowItem: {
       default: function () {
         return { name: 'itemname', value: 'i', id: 2 }
       },
       type: Object
+    },
+    itemKey: {
+      default: 'key',
+      type: String
     },
     itemFormatter: {
       default: function (rowItem) {
@@ -56,41 +68,33 @@ export default {
     buttonKey: {
       default: 'id',
       type: String
+    },
+    activeRow: {
+      default: 'row',
+      type: String
     }
   },
   methods: {
-    buttonClicked (buttonName, buttonValue) {
+    buttonClicked (buttonName, buttonValue, buttonKey) {
       this.$emit('buttonClicked', buttonName, buttonValue)
-    }
-  },
-  filters: {
-    minuteTime: function (departTime) {
-      return moment(departTime).format('HH:mm')
+      this.activeKey = buttonKey
     }
   }
 }
 </script>
 <style scoped>
   button.fares{
-    font-weight: 600;
-    font-size: 14px;
-  }
-  button.fares:nth-of-type(1){
-    border: 1px solid rgba(0,0,0,0.2);
-  }
-  button.fares:nth-of-type(2){
-    border: 1px solid rgba(237, 117, 241, 0.904);
-  }
-  button.fares:nth-of-type(3){
-    border: 1px solid rgba(144, 137, 245, 0.904);
-  }
-  button.fares:hover{
-    color: #30C6DC;
-    background-color: #f1f1f1;
-    border: 1px solid #30C6DC;
+    font-size: 12px;
+    margin: 0 2px;
+    width: 105px;
+    height: 40px;
+    padding: 5px 10px;
   }
   time {
     font-weight: 600;
+    font-size: 12px;
+    padding-right: 10px;
+    display: inline;
   }
   .row-wrapper{
     margin: 1rem auto;
@@ -99,10 +103,20 @@ export default {
     align-items: center;
   }
   .selectble-row{
-      line-height: 2;
+    line-height: 2;
   }
   .toggled{
-    background-color: #30C6DC;
-    color: white;
+    background-color: white;
+    color: black;
+  }
+  span{
+    display: block;
+  }
+  .ticket-type{
+    font-size: 10px;
+    margin-bottom: 5px;
+  }
+  .ticket-price{
+    font-size: 14px;
   }
 </style>
