@@ -31,6 +31,7 @@
             v-bind:class="{ active: isActive}"
             confirm
             :not-before="departDate"
+            :disabled-days="[departDate]"
             v-model="returnDate"
             title="return date"/>
         </time>
@@ -66,7 +67,6 @@
           v-if="returnSearchResults && searched"
           />
         </div>
-
       <Summary
         :data="summaryData"
         v-if="summaryResults"/>
@@ -78,8 +78,9 @@
     </div>
     <p class="invalid" v-if="!searchResults && departDate && searched">
     There are no flights available on the selected date.</p>
-    <p class="invalid" v-if="!returnSearchResults && returnDate && searched">
-    There are no return flights available on the selected date.</p>
+    <p class="invalid" v-if="!returnSearchResults && returnDate && !returnValid">
+    There is an error with the form. Please select a departure and an arrival station
+    and at least departing date.</p>
   </main>
 </template>
 
@@ -88,7 +89,7 @@ import Selector from './components/Selector'
 import List from './components/List'
 import Summary from './components/Summary'
 import { getStations, getFlights } from './services/apiCalls'
-import { getConnectedStations, itemTextFormatter } from './services/dataManipulation'
+import { getConnectedStations, validateStations, itemTextFormatter } from './services/dataManipulation'
 import DatePicker from 'vue2-datepicker'
 
 export default {
@@ -125,11 +126,11 @@ export default {
   },
   mounted () {
     if (localStorage.stations) {
-      this.stations = JSON.parse(localStorage.stations)
+      this.stations = validateStations(JSON.parse(localStorage.stations))
     } else {
       let here = this
       getStations().then(data => {
-        here.stations = data
+        here.stations = validateStations(data)
       })
     }
     if (localStorage.currentDepart) {
@@ -175,9 +176,6 @@ export default {
       }
       this.summaryResults = true
     },
-    asd: function () {
-      this.currentDepart = this.stations[6]
-    },
     chooseReturn: function () {
       this.isActive = true
     },
@@ -197,6 +195,14 @@ export default {
     },
     formValid: function () {
       if (this.currentDepart && this.currentArrive && this.departDate) {
+        return true
+      } else {
+        return false
+      }
+    },
+    returnValid: function () {
+      if (this.currentDepart && this.currentArrive &&
+      this.departDate && this.returnDate) {
         return true
       } else {
         return false
@@ -303,8 +309,10 @@ input.mx-input{
 }
 .list-summary-wrapper{
   display: flex;
+  width: 100%;
 }
 .list-wrapper{
+  width: 60%;
   display: flex;
   flex-direction: column;
 }
