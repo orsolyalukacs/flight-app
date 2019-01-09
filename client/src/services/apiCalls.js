@@ -9,7 +9,6 @@ const defaultFormatter = function (value) {
 
 export async function getStations (stationUrl = defaultStationUrl) {
   // pulls station data from API
-  // use to cache all stations on created() in App
   const response = await fetch(stationUrl)
   const json = await response.json()
   return json
@@ -19,9 +18,9 @@ export async function getFlights (departStation, arriveStation, date = defaultDa
   baseUrl = defaultFlightUrl, stationField = defaultStationField, dateFormatter = defaultFormatter) {
   // this gets flights given a departing and arrival station and depart date// hides all data formatting from the App
   // use args in the second row for reusability
-  var departIata = departStation[stationField]
-  var arriveIata = arriveStation[stationField]
-  var dateString = dateFormatter(date)
+  let departIata = departStation[stationField]
+  let arriveIata = arriveStation[stationField]
+  let dateString = dateFormatter(date)
   const response = await fetch(baseUrl + departIata + '&arrivalStation=' + arriveIata + '&date=' + dateString)
   const data = response.json()
   return data

@@ -8,10 +8,10 @@ export function mapStationsToIata (stations) {
 }
 
 export function itemTextFormatter (item) {
-  var departTime = item.departure.split('T')[1].split('+')[0]
-  var arriveTime = item.arrival.split('T')[1].split('+')[0]
-  var departJoined = departTime.split(':').splice(0, 2)
-  var arriveJoined = arriveTime.split(':').splice(0, 2)
+  let departTime = item.departure.split('T')[1].split('+')[0]
+  let arriveTime = item.arrival.split('T')[1].split('+')[0]
+  let departJoined = departTime.split(':').splice(0, 2)
+  let arriveJoined = arriveTime.split(':').splice(0, 2)
   return departJoined.join(':') + ' - ' + arriveJoined.join(':')
 }
 
@@ -25,7 +25,7 @@ export function validateStations (items) {
     }
     return 0
   }
-  var filteredItems = items.filter(item => { return (item.connections.map(elem => elem.hasOwnProperty('iata')).some(elem => elem)) })
+  let filteredItems = items.filter(item => { return (item.connections.map(elem => elem.hasOwnProperty('iata')).some(elem => elem)) })
   filteredItems.sort(compare)
   return filteredItems
 }

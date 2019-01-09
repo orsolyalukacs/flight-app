@@ -68,7 +68,6 @@ export default {
   methods: {
     onChange () {
       this.$emit('input', this.selected)
-      console.log(this.items)
     }
   },
   watch: {
