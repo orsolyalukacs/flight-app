@@ -7,7 +7,7 @@
         v-bind:key="item[itemKey]"
         v-for="item in items"
         v-bind:value="itemValue=='' ? item : item[itemValue]">
-        {{item[displayedName]}}
+        {{item.shortName}}
       </option>
     </select>
   </section>
@@ -68,6 +68,7 @@ export default {
   methods: {
     onChange () {
       this.$emit('input', this.selected)
+      console.log(this.items)
     }
   },
   watch: {
@@ -89,15 +90,12 @@ export default {
     font-size: .8rem;
   }
   button:hover{
-    border: 1px solid #261394;
-    /* background-color: #f1f1f1; */
     color: #261394;
+    background-color: rgba(255,255,255,0.6)
   }
   select{
     width: 100%;
     max-width: 160px;
-    border: 1px solid #ccc;
-    color: #555;
     background-color:white;
     height: 34px;
     border-radius: 4px;

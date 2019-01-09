@@ -12,7 +12,7 @@
       <p class="return-ticket" v-if="data.returnTicket.price">
         and a <br>
         <em>{{ data.returnTicket.bundle }}</em> return ticket for {{ data.returnTicket.price }} € <br>
-        coming back to <strong>{{$vnode.context.currentArrive.shortName}}</strong> on
+        coming back to <strong>{{$vnode.context.currentArrive.shortName}}</strong> on <br>
         <span v-if="data.returnTicket.price">{{$vnode.context.returnDate.toISOString().split('T')[0]}}. </span>
       </p>
     </div>
@@ -44,21 +44,23 @@ export default {
 </script>
 <style>
   .summary{
-    background-color: #f1f1f1;
+    background-color: rgba(255,255,255,0.6);
     padding: 20px 10px;
-    border: 1px solid rgba(237, 117, 241, 0.904);
-    margin: 10px 0 10px 10px;
+    margin: 10px 0 0 10px;
     text-align: left;
+    width: 40%;
   }
   h4{
     margin: 0.4em auto;
   }
   em{
-    color: #2ECEDA;
     font-weight: 600;
   }
   p{
     margin-block-start: 0;
     margin-block-end: 0;
+  }
+  .totalsum{
+    color: #150773;
   }
 </style>
