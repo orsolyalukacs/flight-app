@@ -42,37 +42,44 @@
     <p class="invalid" v-if="!formValid && searched">
       Error with the form. Please select both departing and arriving station and
       at least a departing date.</p>
-    <List
-      :items="departListItems"
-      displayedName="departure"
-      @row-selected="rowSelected('departTicket', ...arguments)"
-      buttons="fares"
-      buttonNames="bundle"
-      buttonValues="price"
-      title="Departing flights"
-      :itemFormatter="itemFormatter"
-      v-if="searchResults"/>
-      <p class="invalid" v-if="!searchResults && departDate && searched">
-        There are no flights available on the selected date.</p>
-    <button class="choose-return" v-if="searched && !returnDate &&!returnSearchResults" @click="chooseReturn">
-      Choose return flight
-    </button>
-    <List
-      :items="returnListItems"
-      displayedName="departure"
-      @row-selected="rowSelected('returnTicket', ...arguments)"
-      buttons="fares"
-      buttonNames="bundle"
-      buttonValues="price"
-      title="Return flights"
-      :itemFormatter="itemFormatter"
-      v-if="searched && returnSearchResults"
-      />
-      <p class="invalid" v-if="!returnSearchResults && returnDate && searched">
-        There are no return flights available on the selected date.</p>
-    <Summary
-      :data="summaryData"
-      v-if="summaryResults"/>
+    <div class="list-summary-wrapper">
+      <div class="list-wrapper">
+        <List
+          :items="departListItems"
+          displayedName="departure"
+          @row-selected="rowSelected('departTicket', ...arguments)"
+          buttons="fares"
+          buttonNames="bundle"
+          buttonValues="price"
+          title="Departing flights"
+          :itemFormatter="itemFormatter"
+          v-if="searchResults && searched"/>
+        <List
+          :items="returnListItems"
+          displayedName="departure"
+          @row-selected="rowSelected('returnTicket', ...arguments)"
+          buttons="fares"
+          buttonNames="bundle"
+          buttonValues="price"
+          title="Return flights"
+          :itemFormatter="itemFormatter"
+          v-if="returnSearchResults && searched"
+          />
+        </div>
+
+      <Summary
+        :data="summaryData"
+        v-if="summaryResults"/>
+    </div>
+    <div class="button-wrapper">
+      <button class="choose-return" v-if="searched && !returnDate &&!returnSearchResults" @click="chooseReturn">
+        Choose return flight
+      </button>
+    </div>
+    <p class="invalid" v-if="!searchResults && departDate && searched">
+    There are no flights available on the selected date.</p>
+    <p class="invalid" v-if="!returnSearchResults && returnDate && searched">
+    There are no return flights available on the selected date.</p>
   </main>
 </template>
 
@@ -173,6 +180,9 @@ export default {
     },
     chooseReturn: function () {
       this.isActive = true
+    },
+    clearSearchResults: function () {
+      this.searched = false
     }
   },
   computed: {
@@ -220,7 +230,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  width: 70%;
+  width: 80%;
   margin: 60px auto;
 }
 button{
@@ -290,5 +300,15 @@ input.mx-input{
 }
 .active{
   border:2px solid rgb(248, 114, 114);
+}
+.list-summary-wrapper{
+  display: flex;
+}
+.list-wrapper{
+  display: flex;
+  flex-direction: column;
+}
+.button-wrapper{
+  width: 20%;
 }
 </style>

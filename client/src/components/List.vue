@@ -100,6 +100,13 @@ export default {
 </script>
 <style scoped>
 .list{
-  margin: 2rem auto;
+  margin: 10px 0;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border: 1px solid #2ECEDA;
+}
+.list-title{
+  text-align: left;
+  padding-left: 10px;
 }
 </style>
