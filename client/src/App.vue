@@ -80,7 +80,7 @@
         v-if="summaryResults"/>
     </div>
     <div class="button-wrapper">
-      <button class="choose-return" v-if="searched && !returnDate &&!returnSearchResults" @click="chooseReturn">
+      <button class="choose-return" v-if="searched && formValid && !returnDate &&!returnSearchResults" @click="chooseReturn">
         Choose return flight
       </button>
     </div>
@@ -205,6 +205,8 @@ export default {
     clearList: function () {
       this.summaryResults = false
       this.searchResults = false
+      this.isActive = false
+      this.searched = false
     },
     clearReturn: function () {
       this.summaryResults = false
