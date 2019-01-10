@@ -24,7 +24,8 @@
             v-model="departDate"
             confirm :not-before="new Date()"
             :not-after="returnDate"
-            title="depart date"/>
+            title="depart date"
+            @change="clearList"/>
           <date-picker
             lang="en"
             id="return-date"
@@ -33,7 +34,8 @@
             :not-before="departDate"
             :disabled-days="[departDate]"
             v-model="returnDate"
-            title="return date"/>
+            title="return date"
+            @change="clearReturn"/>
         </time>
       </div>
       <button v-if="formValid" @click="searchFlights" :disabled="!formValid">
@@ -82,10 +84,10 @@
         Choose return flight
       </button>
     </div>
-    <p class="invalid" v-if="!searchResults && searched">
+    <!-- <p class="invalid" v-if="!searchResults && searched">
     There are no flights available on the selected date.</p>
     <p class="invalid" v-if="!returnSearchResults && returnDate && searched">
-    There are no flights available on the selected date.</p>
+    There are no flights available on the selected date.</p> -->
     <p class="invalid" v-if="returnDate && !returnValid">
     There is an error with the form. Please select a departure and an arrival station
     and at least departing date.</p>
@@ -177,7 +179,6 @@ export default {
           .then(() => {
             vm.isReturnLoading = false
           })
-        console.log(vm.returnListItems)
         this.isActive = false
       } else {
         vm.returnListItems = []
@@ -200,6 +201,14 @@ export default {
     },
     clearSearchResults: function () {
       this.searched = false
+    },
+    clearList: function () {
+      this.summaryResults = false
+      this.searchResults = false
+    },
+    clearReturn: function () {
+      this.summaryResults = false
+      this.returnSearchResults = false
     }
   },
   computed: {
