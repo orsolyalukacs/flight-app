@@ -26,7 +26,7 @@
 import ListSelectableRow from './ListSelectableRow'
 
 export default {
-  name: 'List',
+  name: 'FlightsList',
   components: {
     ListSelectableRow
   },

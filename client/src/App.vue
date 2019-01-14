@@ -3,14 +3,14 @@
     <section class="select-group">
       <div class="select-wrapper">
         <div class="flight-select-wrapper">
-          <Selector
+          <FlightSelector
             :items="stations"
             v-model="currentDepart"
             placeholder="Select departure"
             displayedName="shortName"
             itemValue=""
             title="Flight from"/>
-          <Selector
+          <FlightSelector
             :items="connectingStations"
             v-model="currentArrive"
             placeholder="Select arrival"
@@ -47,7 +47,7 @@
       at least a departing date.</p>
     <section class="list-summary-wrapper">
       <div class="list-wrapper">
-        <List
+        <FlightsList
           :items="departListItems"
           displayedName="departure"
           @row-selected="rowSelected('departTicket', ...arguments)"
@@ -60,7 +60,7 @@
           :isLoading="isLoading"
           :itemFormatter="itemFormatter"
           v-if="searchResults && searched"/>
-        <List
+        <FlightsList
           :items="returnListItems"
           displayedName="departure"
           @row-selected="rowSelected('returnTicket', ...arguments)"
@@ -75,7 +75,7 @@
           v-if="returnSearchResults && searched"
           />
         </div>
-      <Summary
+      <FlightSummary
         :data="summaryData"
         v-if="summaryResults"/>
     </section>
@@ -95,9 +95,9 @@
 </template>
 
 <script>
-import Selector from './components/Selector'
-import List from './components/List'
-import Summary from './components/Summary'
+import FlightSelector from './components/FlightSelector'
+import FlightsList from './components/FLightsList'
+import FlightSummary from './components/FlightSummary'
 import { getStations, getFlights } from './services/apiCalls'
 import { getConnectedStations, validateStations, itemTextFormatter } from './services/dataManipulation'
 import DatePicker from 'vue2-datepicker'
@@ -105,10 +105,10 @@ import DatePicker from 'vue2-datepicker'
 export default {
   name: 'App',
   components: {
-    Selector,
+    FlightSelector,
     DatePicker,
-    List,
-    Summary
+    FlightsList,
+    FlightSummary
   },
   data () {
     return {
@@ -355,7 +355,7 @@ export default {
     justify-content: center;
   }
   .choose-return{
-    margin: 15px 0;
+    // margin: 0;
     background-color: $dark-blue;
     color: white;
     width: 20%;
@@ -366,7 +366,7 @@ export default {
     background-color: $light-grey;
   }
   @include phone(){
-    margin: 15px auto;
+    margin: 0 auto;
   }
 }
 </style>

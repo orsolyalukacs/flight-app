@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  name: 'Summary',
+  name: 'FlightSummary',
   props: {
     data: {
       default: function () {

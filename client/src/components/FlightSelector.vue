@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: 'Selector',
+  name: 'FlightSelector',
   data () {
     return {
       selected: ''
