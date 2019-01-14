@@ -3,14 +3,14 @@
     <section class="select-group">
       <div class="select-wrapper">
         <div class="flight-select-wrapper">
-          <FlightSelector
+          <flight-selector
             :items="stations"
             v-model="currentDepart"
             placeholder="Select departure"
             displayedName="shortName"
             itemValue=""
             title="Flight from"/>
-          <FlightSelector
+          <flight-selector
             :items="connectingStations"
             v-model="currentArrive"
             placeholder="Select arrival"
@@ -47,7 +47,7 @@
       at least a departing date.</p>
     <section class="list-summary-wrapper">
       <div class="list-wrapper">
-        <FlightsList
+        <flights-list
           :items="departListItems"
           displayedName="departure"
           @row-selected="rowSelected('departTicket', ...arguments)"
@@ -60,7 +60,7 @@
           :isLoading="isLoading"
           :itemFormatter="itemFormatter"
           v-if="searchResults && searched"/>
-        <FlightsList
+        <flights-list
           :items="returnListItems"
           displayedName="departure"
           @row-selected="rowSelected('returnTicket', ...arguments)"
@@ -75,7 +75,7 @@
           v-if="returnSearchResults && searched"
           />
         </div>
-      <FlightSummary
+      <flight-summary
         :data="summaryData"
         v-if="summaryResults"/>
     </section>
