@@ -38,14 +38,14 @@
             @change="clearReturn"/>
         </time>
       </div>
-      <button v-if="formValid" @click="searchFlights" :disabled="!formValid">
+      <button class="search-button" v-if="formValid" @click="searchFlights" :disabled="!formValid">
         {{searchButtonText}}
       </button>
     </section>
     <p class="invalid" v-if="!formValid && searched">
       Error with the form. Please select both departing and arriving station and
       at least a departing date.</p>
-    <div class="list-summary-wrapper">
+    <section class="list-summary-wrapper">
       <div class="list-wrapper">
         <List
           :items="departListItems"
@@ -78,12 +78,12 @@
       <Summary
         :data="summaryData"
         v-if="summaryResults"/>
-    </div>
-    <div class="button-wrapper">
+    </section>
+    <section class="button-wrapper">
       <button class="choose-return" v-if="searched && formValid && !returnDate &&!returnSearchResults" @click="chooseReturn">
         Choose return flight
       </button>
-    </div>
+    </section>
     <!-- <p class="invalid" v-if="!searchResults && searched">
     There are no flights available on the selected date.</p>
     <p class="invalid" v-if="!returnSearchResults && returnDate && searched">
@@ -276,6 +276,9 @@ export default {
   padding: 20px 0;
   background-color: $light-grey;
   margin-top: 50px;
+  .search-button{
+    width: 20%;
+  }
   .select-wrapper{
     display: flex;
     flex-direction: column;
@@ -327,11 +330,17 @@ export default {
   }
 }
 .button-wrapper{
-  width: 20%;
+  width: 100%;
+  display: flex;
   .choose-return{
-    margin: 10px auto;
+    margin: 15px 0;
     background-color: $dark-blue;
     color: white;
+    width: 20%;
+  }
+  .choose-return:hover{
+    color: $navy-blue;
+    background-color: $light-grey;
   }
 }
 </style>

@@ -44,14 +44,14 @@ export default {
 </script>
 <style lang="scss">
  @import "../styles/colors.scss";
-  .summary{
-    background-color:$light-grey;
-    padding: 20px 10px;
-    margin: 10px 0 0 10px;
-    text-align: left;
-    width: 40%;
-    .totalsum{
-      color: $dark-blue;
-    }
+.summary{
+  background-color:$light-grey;
+  padding: 20px 10px;
+  margin: 10px 0 0 10px;
+  text-align: left;
+  width: 40%;
+  .totalsum{
+    color: $dark-blue;
   }
+}
 </style>

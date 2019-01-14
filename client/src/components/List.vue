@@ -115,25 +115,26 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
+ @import "../styles/main.scss";
 .list{
   margin: 10px 0 0 0;
   background-color: rgba(255,255,255,0.6);
   padding: 10px;
-}
-.list-title{
-  text-align: left;
-  padding-left: 10px;
-  display: flex;
-  align-items: center;
-  height: 55px;
-}
-.spinner-wrapper{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-.spinner{
-  justify-content: flex-end;
+  .spinner-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    .list-title{
+      text-align: left;
+      padding-left: 10px;
+      display: flex;
+      align-items: center;
+      height: 55px;
+    }
+    .spinner{
+      justify-content: flex-end;
+    }
+  }
 }
 </style>

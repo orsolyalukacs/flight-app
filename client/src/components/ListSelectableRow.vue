@@ -2,7 +2,7 @@
   <section class="selectable-row">
     <div class="row-wrapper">
         <time class="selectable-body">
-            {{itemFormatter(rowItem)}}
+          {{itemFormatter(rowItem)}}
         </time>
         <button class="fares"
         v-bind:key="button[buttonKey]"
@@ -97,7 +97,7 @@ export default {
     display: inline;
   }
   .row-wrapper{
-    margin: 1rem auto;
+    margin: 15px auto;
     display: flex;
     justify-content: space-around;
     align-items: center;
