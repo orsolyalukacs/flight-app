@@ -271,9 +271,12 @@ export default {
   color: $dark-grey;
   width: 80%;
   margin: 60px auto;
+  @include max-tablet(){
+    width: 95%;
+  }
 }
 .select-group{
-  padding: 20px 0;
+  padding: 20px 0 40px 0;
   background-color: $light-grey;
   margin-top: 50px;
   .search-button{

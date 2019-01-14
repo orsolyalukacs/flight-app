@@ -119,14 +119,13 @@ export default {
  @import "../styles/main.scss";
 .list{
   background-color: rgba(255,255,255,0.6);
-  padding: 10px;
+  padding: 40px 15px;
   .spinner-wrapper{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     .list-title{
       text-align: left;
-      padding-left: 10px;
       display: flex;
       align-items: center;
       height: 55px;
