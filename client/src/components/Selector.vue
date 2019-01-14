@@ -77,46 +77,29 @@ export default {
   }
 }
 </script>
-<style>
-  h1{
-    font-size: 1.6rem;
-    color: #1c0e75;
-  }
-  h2{
-    display: inline-block;
-    font-weight: bold;
-    color: #150773;
-    font-size: .8rem;
-  }
-  button:hover{
-    color: #261394;
-    background-color: rgba(255,255,255,0.6)
-  }
-  select{
-    width: 100%;
-    max-width: 160px;
-    background-color:white;
-    height: 34px;
-    border-radius: 4px;
-  }
-  option{
-    background-color: white;
-  }
-  input{
-    width: 50%;
-    display: block;
-  }
-  .selector-title{
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    align-items: flex-start;
-  }
+<style lang="scss">
   .flight-select{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     min-width: 160px;
     padding-right: 20px;
+    .selector-list{
+      width: 100%;
+      max-width: 160px;
+      background-color:white;
+      height: 34px;
+      border-radius: 4px;
+      border: transparent;
+    }
+    option{
+      background-color: white;
+    }
+    .selector-title{
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 </style>

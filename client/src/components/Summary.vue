@@ -42,25 +42,16 @@ export default {
   }
 }
 </script>
-<style>
+<style lang="scss">
+ @import "../styles/colors.scss";
   .summary{
-    background-color: rgba(255,255,255,0.6);
+    background-color:$light-grey;
     padding: 20px 10px;
     margin: 10px 0 0 10px;
     text-align: left;
     width: 40%;
-  }
-  h4{
-    margin: 0.4em auto;
-  }
-  em{
-    font-weight: 600;
-  }
-  p{
-    margin-block-start: 0;
-    margin-block-end: 0;
-  }
-  .totalsum{
-    color: #150773;
+    .totalsum{
+      color: $dark-blue;
+    }
   }
 </style>

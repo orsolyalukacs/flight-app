@@ -258,112 +258,80 @@ export default {
   }
 }
 </script>
-<style>
-body{
-  background-image: linear-gradient(#457fca, #5691c8 );
-  background-repeat: no-repeat;
-  background-size: 100% auto;
-  background-position: center top;
-  background-attachment: fixed;
-}
+<style lang="scss">
+@import "./styles/main.scss";
+@import "./styles/copy.scss";
+@import "./styles/colors.scss";
+
 #root {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: $dark-grey;
   width: 80%;
   margin: 60px auto;
 }
-button{
-  font-size: 12px;
-  line-height: 1;
-  padding: 10px;
-  margin: 0 5px;
-  cursor: pointer;
-  background-color: #457FFB;
-  color: white;
-  border: none;
-  outline: none;
-  border-radius: 4px;
-}
-select{
-  border-color: transparent;
-  color:#150773;
-}
 .select-group{
   padding: 20px 0;
-  background-color: rgba(255,255,255,0.6);
-;
+  background-color: $light-grey;
   margin-top: 50px;
-}
-.select-wrapper{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: flex-start;
-  padding: 15px;
-}
-.flight-select-wrapper{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 1.2rem;
-  justify-content: center;
-  width: 100%;
-}
-.datetime{
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: center;
-  width: 100%;
-}
-.active {
-  display: block;
-}
-.mx-datepicker{
-  max-width: 160px;
-  width: 100%;
-  align-items: flex-start;
-  padding-right: 15px;
-}
-.mx-datepicker-button{
-  margin: 0 20px;
-}
-input.mx-input{
-  background-color: white;
-  color:#150773;
-  border: none;
-  font-size: 12px;
-}
-.mx-calendar-content .cell.actived{
-  background-color: #457FFB;
-}
-.invalid{
-  margin-top: 10px;
-  font-size: 12px;
-  color: white;
-  text-align: left;
-}
-.choose-return{
-  margin: 10px auto;
-  background-color: #150773;
-  color: white;
-}
-.active{
-  border:2px solid rgb(248, 114, 114);
+  .select-wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    padding: 15px;
+    .flight-select-wrapper{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 1.2rem;
+      justify-content: center;
+      width: 100%;
+    }
+    .datetime{
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+      width: 100%;
+      .mx-datepicker{
+        max-width: 160px;
+        width: 100%;
+        align-items: flex-start;
+        padding-right: 15px;
+      }
+      .mx-datepicker-button{
+        margin: 0 20px;
+      }
+      input.mx-input{
+        background-color: white;
+        color:$dark-blue;
+        border: none;
+        font-size: 12px;
+      }
+      .mx-calendar-content .cell.actived{
+        background-color: $corn-blue;
+      }
+    }
+  }
 }
 .list-summary-wrapper{
   display: flex;
   width: 100%;
-}
-.list-wrapper{
-  width: 60%;
-  display: flex;
-  flex-direction: column;
+  .list-wrapper{
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+  }
 }
 .button-wrapper{
   width: 20%;
+  .choose-return{
+    margin: 10px auto;
+    background-color: $dark-blue;
+    color: white;
+  }
 }
 </style>
