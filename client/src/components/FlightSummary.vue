@@ -42,23 +42,27 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../styles/main.scss";
 @import "../styles/colors.scss";
 .summary{
   background-color:$light-grey;
-  padding: 20px 10px;
-  margin: 10px 0 0 10px;
+  padding: 20px 10px 40px;
+  margin: 0 0 0 10px;
   text-align: left;
   width: 40%;
-  @include tablet(){
+  line-height: 2;
+  @include max-tablet(){
     margin: 15px 0;
-  }
-  @include phone(){
     width: 100%;
+    padding: 40px 10px 0;
+  }
+  .summary-text{
+    padding: 15px;
   }
   .totalsum{
     color: $dark-blue;
+    padding: 15px;
   }
 }
 </style>
