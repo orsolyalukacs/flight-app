@@ -37,3 +37,8 @@ input{
   color: white;
   text-align: left;
 }
+@mixin phone() {
+  @media ( max-width: 575px ){
+    @content;
+  }
+}

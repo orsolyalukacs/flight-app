@@ -43,6 +43,7 @@ export default {
 }
 </script>
 <style lang="scss">
+@import "../styles/main.scss";
  @import "../styles/colors.scss";
 .summary{
   background-color:$light-grey;
@@ -50,6 +51,9 @@ export default {
   margin: 10px 0 0 10px;
   text-align: left;
   width: 40%;
+  @include phone(){
+    width: 100%;
+  }
   .totalsum{
     color: $dark-blue;
   }

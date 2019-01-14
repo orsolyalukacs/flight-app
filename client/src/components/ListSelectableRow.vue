@@ -92,14 +92,14 @@ export default {
   }
   time {
     font-weight: 600;
-    font-size: 12px;
-    padding-right: 10px;
+    font-size: 14px;
+    padding: 10px;
     display: inline;
   }
   .row-wrapper{
     margin: 15px auto;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
   }
   .selectble-row{

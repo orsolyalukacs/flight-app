@@ -278,6 +278,7 @@ export default {
   margin-top: 50px;
   .search-button{
     width: 20%;
+    min-width: 120px;
   }
   .select-wrapper{
     display: flex;
@@ -292,6 +293,9 @@ export default {
       margin-bottom: 1.2rem;
       justify-content: center;
       width: 100%;
+      @include phone(){
+        flex-direction: column;
+      }
     }
     .datetime{
       display: flex;
@@ -299,11 +303,19 @@ export default {
       align-items: flex-start;
       justify-content: center;
       width: 100%;
+      @include phone(){
+        flex-direction: column;
+        margin: 15px auto;
+        align-items: center;
+      }
       .mx-datepicker{
         max-width: 160px;
         width: 100%;
         align-items: flex-start;
         padding-right: 15px;
+        @include phone(){
+          margin: 7px 0;
+        }
       }
       .mx-datepicker-button{
         margin: 0 20px;
@@ -323,24 +335,38 @@ export default {
 .list-summary-wrapper{
   display: flex;
   width: 100%;
+  margin: 15px 0;
+  @include phone(){
+    flex-direction: column;
+  }
   .list-wrapper{
     width: 60%;
     display: flex;
     flex-direction: column;
+    @include phone(){
+      width: 100%;
+    }
   }
 }
 .button-wrapper{
   width: 100%;
   display: flex;
+  @include phone(){
+    justify-content: center;
+  }
   .choose-return{
     margin: 15px 0;
     background-color: $dark-blue;
     color: white;
     width: 20%;
+    min-width: 120px;
   }
   .choose-return:hover{
     color: $navy-blue;
     background-color: $light-grey;
+  }
+  @include phone(){
+    margin: 15px auto;
   }
 }
 </style>
