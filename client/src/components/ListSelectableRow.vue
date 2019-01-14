@@ -4,17 +4,18 @@
         <time class="selectable-body">
           {{itemFormatter(rowItem)}}
         </time>
-        <button class="fares"
-        v-bind:key="button[buttonKey]"
-        v-for="button in buttons"
-        v-bind:class="{toggled: button[buttonKey] === activeKey
-        && rowItem[itemKey] === activeRow}"
-        v-if="rowItem.remainingTickets > 0"
-        @click="buttonClicked(button[buttonName], button[buttonValue],
-        button[buttonKey])">
-            <span class="ticket-type"><em>{{button[buttonName]}}</em></span>
-            <span class="ticket-price">{{button[buttonValue]}} €</span>
-        </button>
+        <ul v-if="remainingTickets">
+          <button class="fares"
+          v-bind:key="button[buttonKey]"
+          v-for="button in buttons"
+          v-bind:class="{toggled: button[buttonKey] === activeKey
+          && rowItem[itemKey] === activeRow}"
+          @click="buttonClicked(button[buttonName], button[buttonValue],
+          button[buttonKey])">
+              <span class="ticket-type"><em>{{button[buttonName]}}</em></span>
+              <span class="ticket-price">{{button[buttonValue]}} €</span>
+          </button>
+        </ul>
     </div>
   </section>
 </template>
@@ -79,16 +80,36 @@ export default {
       this.$emit('buttonClicked', buttonName, buttonValue)
       this.activeKey = buttonKey
     }
+  },
+  computed: {
+    remainingTickets: function () {
+      if (this.rowItem.remainingTickets > 0) {
+        return true
+      } else {
+        return false
+      }
+    }
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
+@import "../styles/main.scss";
   button.fares{
     font-size: 12px;
     margin: 0 2px;
     width: 105px;
     height: 40px;
     padding: 5px 10px;
+    flex-grow: 1;
+     @include tablet(){
+      width: 60px;
+      padding: 5px;
+    }
+    @include phone(){
+      width: 45px;
+      padding: 5px;
+      font-size: 10px;
+    }
   }
   time {
     font-weight: 600;
@@ -101,6 +122,9 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    @include tablet(){
+      justify-content: space-evenly;
+    }
   }
   .selectble-row{
     line-height: 2;
@@ -118,5 +142,16 @@ export default {
   }
   .ticket-price{
     font-size: 14px;
+      @include phone(){
+      font-size: 12px;
+    }
+  }
+  ul{
+    margin-block-end: 0;
+    margin-block-start: 0;
+    padding-inline-start: 0;
+    width: 75%;
+    display: flex;
+    justify-content: space-between;
   }
 </style>

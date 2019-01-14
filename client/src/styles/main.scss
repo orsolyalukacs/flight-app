@@ -42,3 +42,14 @@ input{
     @content;
   }
 }
+@mixin tablet() {
+  @media ( max-width: 990px ) and (min-width: 576px){
+    @content;
+  }
+}
+@mixin max-tablet() {
+  @media ( max-width: 990px ){
+    @content;
+  }
+}
+

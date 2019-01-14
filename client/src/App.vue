@@ -336,14 +336,14 @@ export default {
   display: flex;
   width: 100%;
   margin: 15px 0;
-  @include phone(){
+  @include max-tablet(){
     flex-direction: column;
   }
   .list-wrapper{
     width: 60%;
     display: flex;
     flex-direction: column;
-    @include phone(){
+    @include max-tablet(){
       width: 100%;
     }
   }
@@ -355,7 +355,7 @@ export default {
     justify-content: center;
   }
   .choose-return{
-    // margin: 0;
+    margin: 0;
     background-color: $dark-blue;
     color: white;
     width: 20%;
@@ -366,7 +366,7 @@ export default {
     background-color: $light-grey;
   }
   @include phone(){
-    margin: 0 auto;
+    margin: 15pz auto;
   }
 }
 </style>

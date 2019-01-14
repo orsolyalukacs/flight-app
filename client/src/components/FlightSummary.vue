@@ -44,13 +44,16 @@ export default {
 </script>
 <style lang="scss">
 @import "../styles/main.scss";
- @import "../styles/colors.scss";
+@import "../styles/colors.scss";
 .summary{
   background-color:$light-grey;
   padding: 20px 10px;
   margin: 10px 0 0 10px;
   text-align: left;
   width: 40%;
+  @include tablet(){
+    margin: 15px 0;
+  }
   @include phone(){
     width: 100%;
   }

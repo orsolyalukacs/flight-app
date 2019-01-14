@@ -118,7 +118,6 @@ export default {
 <style lang="scss" scoped>
  @import "../styles/main.scss";
 .list{
-  margin: 10px 0 0 0;
   background-color: rgba(255,255,255,0.6);
   padding: 10px;
   .spinner-wrapper{
