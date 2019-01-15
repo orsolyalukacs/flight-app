@@ -38,7 +38,10 @@
             @change="clearReturn"/>
         </time>
       </div>
-      <button class="search-button" v-if="formValid" @click="searchFlights" :disabled="!formValid">
+      <button class="search-button"
+        v-if="formValid"
+        @click="searchFlights"
+        :disabled="!formValid">
         {{searchButtonText}}
       </button>
     </section>
@@ -80,7 +83,9 @@
         v-if="summaryResults"/>
     </section>
     <section class="button-wrapper">
-      <button class="choose-return" v-if="searched && formValid && !returnDate &&!returnSearchResults" @click="chooseReturn">
+      <button class="choose-return"
+        v-if="searched && formValid && !returnDate &&!returnSearchResults"
+        @click="chooseReturn">
         Choose return flight
       </button>
     </section>
@@ -88,7 +93,8 @@
     There are no flights available on the selected date.</p>
     <p class="invalid" v-if="!returnSearchResults && returnDate && searched">
     There are no flights available on the selected date.</p> -->
-    <p class="invalid" v-if="returnDate && !returnValid">
+    <p class="invalid"
+      v-if="returnDate && !returnValid">
     There is an error with the form. Please select a departure and an arrival station
     and at least departing date.</p>
   </main>

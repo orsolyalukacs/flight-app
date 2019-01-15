@@ -129,6 +129,7 @@ export default {
       display: flex;
       align-items: center;
       height: 55px;
+
     }
     .spinner{
       justify-content: flex-end;
