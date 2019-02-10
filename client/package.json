@@ -11,6 +11,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "moment": "^2.23.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue2-datepicker": "^2.6.3"
@@ -32,6 +33,7 @@
     "eslint": "^4.15.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-friendly-formatter": "^3.0.0",
+    "eslint-config-airbnb-base": "^13.1.0",
     "eslint-loader": "^1.7.1",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-node": "^5.2.0",
@@ -42,7 +44,6 @@
     "file-loader": "^1.1.4",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "html-webpack-plugin": "^2.30.1",
-    "moment": "^2.23.0",
     "node-notifier": "^5.1.2",
     "node-sass": "^4.11.0",
     "optimize-css-assets-webpack-plugin": "^3.2.0",

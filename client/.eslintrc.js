@@ -1,5 +1,3 @@
-// https://eslint.org/docs/user-guide/configuring
-
 module.exports = {
   root: true,
   parserOptions: {
@@ -7,23 +5,50 @@ module.exports = {
   },
   env: {
     browser: true,
+    es6: true,
   },
   extends: [
-    // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
-    // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
-    'plugin:vue/essential', 
-    // https://github.com/standard/standard/blob/master/docs/RULES-en.md
+    'plugin:vue/essential',
     'airbnb-base'
   ],
-  // required to lint *.vue files
   plugins: [
     'vue'
   ],
-  // add your custom rules here
   rules: {
-    // allow async-await
+    'no-restricted-syntax': 0,
+    'no-console': 'off',
+    'object-shorthand': ['error', 'always', {
+      avoidQuotes: false,
+    }],
+    'import/extensions': ['error', 'always', {
+      js: 'never',
+      vue: 'never',
+      json: 'never',
+    }],
     'generator-star-spacing': 'off',
-    // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'import/no-unresolved': 'off',
+    'no-labels': 'off',
+    'no-prototype-builtins': 'off',
+    'no-return-assign': 'off',
+    'no-unused-expressions': 'off',
+    'no-unused-labels': 'off',
+    'vue/html-closing-bracket-newline': 0,
+    'vue/singleline-html-element-content-newline': 0,
+    'vue/multiline-html-element-content-newline': 0,
+    'vue/max-attributes-per-line': 0,
+    'vue/html-closing-bracket-spacing': ['error', {
+      selfClosingTag: 'never'
+    }],
+  },
+  settings: {
+    'import/resolver': {
+      'node': {
+        'extensions': [
+            '.js',
+            '.jsx',
+            '.vue'
+        ]
+      }
+    }
   }
 }
