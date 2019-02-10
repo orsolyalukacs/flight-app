@@ -1,5 +1,7 @@
 
 @import "/colors.scss";
+@import "/breakpoints.scss";
+
 body{
   background-image: linear-gradient(#457fca, #01B0B4 );
   background-repeat: no-repeat;
@@ -36,20 +38,5 @@ input{
   font-size: 12px;
   color: white;
   text-align: left;
-}
-@mixin phone() {
-  @media ( max-width: 575px ){
-    @content;
-  }
-}
-@mixin tablet() {
-  @media ( max-width: 990px ) and (min-width: 576px){
-    @content;
-  }
-}
-@mixin max-tablet() {
-  @media ( max-width: 990px ){
-    @content;
-  }
 }
 
