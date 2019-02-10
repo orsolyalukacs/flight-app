@@ -16,7 +16,6 @@ module.exports = {
   ],
   rules: {
     'no-restricted-syntax': 0,
-    'no-console': 'off',
     'object-shorthand': ['error', 'always', {
       avoidQuotes: false,
     }],

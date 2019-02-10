@@ -1,15 +1,15 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Selector from '@/components/Selector'
+import Vue from 'vue';
+import Router from 'vue-router';
+import Selector from '@/components/Selector';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
     {
       path: '/',
       name: 'Selector',
-      component: Selector
-    }
-  ]
-})
+      component: Selector,
+    },
+  ],
+});

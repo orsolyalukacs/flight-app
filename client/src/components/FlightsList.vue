@@ -1,137 +1,264 @@
-<template>
-  <section class="list">
-    <div class="spinner-wrapper">
-      <div class="list-title">{{title}}</div>
-      <div class="spinner" v-show="isLoading">
-        <svg width="55px"  height="55px"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-ellipsis" style="background: none;"><!--circle(cx="16",cy="50",r="10")--><circle cx="84" cy="50" r="0" fill="#3b4368"><animate attributeName="r" values="8;0;0;0;0" keyTimes="0;0.25;0.5;0.75;1" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" calcMode="spline" dur="1.8s" repeatCount="indefinite" begin="0s"></animate><animate attributeName="cx" values="84;84;84;84;84" keyTimes="0;0.25;0.5;0.75;1" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" calcMode="spline" dur="1.8s" repeatCount="indefinite" begin="0s"></animate></circle><circle cx="84" cy="50" r="0.568927" fill="#5e6fa3"><animate attributeName="r" values="0;8;8;8;0" keyTimes="0;0.25;0.5;0.75;1" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" calcMode="spline" dur="1.8s" repeatCount="indefinite" begin="-0.9s"></animate><animate attributeName="cx" values="16;16;50;84;84" keyTimes="0;0.25;0.5;0.75;1" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" calcMode="spline" dur="1.8s" repeatCount="indefinite" begin="-0.9s"></animate></circle><circle cx="81.5821" cy="50" r="8" fill="#689cc5"><animate attributeName="r" values="0;8;8;8;0" keyTimes="0;0.25;0.5;0.75;1" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" calcMode="spline" dur="1.8s" repeatCount="indefinite" begin="-0.45s"></animate><animate attributeName="cx" values="16;16;50;84;84" keyTimes="0;0.25;0.5;0.75;1" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" calcMode="spline" dur="1.8s" repeatCount="indefinite" begin="-0.45s"></animate></circle><circle cx="47.5821" cy="50" r="8" fill="#93dbe9"><animate attributeName="r" values="0;8;8;8;0" keyTimes="0;0.25;0.5;0.75;1" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" calcMode="spline" dur="1.8s" repeatCount="indefinite" begin="0s"></animate><animate attributeName="cx" values="16;16;50;84;84" keyTimes="0;0.25;0.5;0.75;1" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" calcMode="spline" dur="1.8s" repeatCount="indefinite" begin="0s"></animate></circle><circle cx="16" cy="50" r="7.43107" fill="#3b4368"><animate attributeName="r" values="0;0;8;8;8" keyTimes="0;0.25;0.5;0.75;1" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" calcMode="spline" dur="1.8s" repeatCount="indefinite" begin="0s"></animate><animate attributeName="cx" values="16;16;16;50;84" keyTimes="0;0.25;0.5;0.75;1" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" calcMode="spline" dur="1.8s" repeatCount="indefinite" begin="0s"></animate></circle></svg>
-      </div>
-    </div>
-    <list-selectable-row
-      v-bind:key="item[itemKey]"
-      v-for="item in items"
-      @buttonClicked="rowSelected(item, ...arguments)"
-      :rowItem="item"
-      :itemKey="itemKey"
-      :activeRow="activeRow"
-      :buttons="item[buttons]"
-      :buttonName="buttonNames"
-      :buttonValue="buttonValues"
-      :buttonKey="buttonKeys"
-      :displayedName="displayedName"
-      :itemFormatter="itemFormatter"/>
-  </section>
-</template>
-
 <script>
-import ListSelectableRow from './ListSelectableRow'
+import ListSelectableRow from './ListSelectableRow';
 
 export default {
   name: 'FlightsList',
   components: {
-    ListSelectableRow
+    ListSelectableRow,
   },
-  data () {
-    return {
-      activeRow: 'row'
-    }
-  },
+  data: () => ({
+    activeRow: 'row',
+  }),
   props: {
     // the default items prop shows how buttons are nested
     items: {
-      default: function () {
-        return [
-          {
-            name: 'jozsi',
-            value: 'j',
-            id: 0,
-            buttons: [
-              { name: 'high',
-                value: 10,
-                id: 0
-              },
-              { name: 'low',
-                value: 5,
-                id: 1
-              }
-            ]
-          },
-          {
-            name: 'feri',
-            value: 'f',
-            id: 1,
-            buttons: [
-              { name: 'high', value: 10, id: 0 },
-              { name: 'low', value: 5, id: 1 }
-            ]
-          }
-        ]
-      },
-      type: Array
+      default: () => [
+        {
+          name: 'jozsi',
+          value: 'j',
+          id: 0,
+          buttons: [
+            {
+              name: 'high',
+              value: 10,
+              id: 0,
+            },
+
+            {
+              name: 'low',
+              value: 5,
+              id: 1,
+            },
+          ],
+        },
+        {
+          name: 'feri',
+          value: 'f',
+          id: 1,
+          buttons: [{ name: 'high', value: 10, id: 0 }, { name: 'low', value: 5, id: 1 }],
+        },
+      ],
+      type: Array,
     },
+
     displayedName: {
       default: 'name',
-      type: String
+      type: String,
     },
+
     itemKey: {
       default: 'key',
-      type: String
+      type: String,
     },
+
     title: {
       default: 'list title',
-      type: String
+      type: String,
     },
+
     buttons: {
       default: 'buttons',
-      type: String
+      type: String,
     },
+
     buttonNames: {
       default: 'name',
-      type: String
+      type: String,
     },
+
     buttonValues: {
       default: 'value',
-      type: String
+      type: String,
     },
     buttonKeys: {
       default: 'id',
-      type: String
+      type: String,
     },
+
     itemFormatter: {
-      default: function (item) {
-        return JSON.stringify(item)
-      },
-      type: Function
+      default: item => JSON.stringify(item),
+      type: Function,
     },
+
     isLoading: {
       default: false,
-      tpye: Boolean
-    }
+      tpye: Boolean,
+    },
   },
   methods: {
-    rowSelected (item, buttonName, buttonValue) {
-      this.$emit('row-selected', item, buttonName, buttonValue)
-      this.activeRow = item[this.itemKey]
-    }
-  }
-}
+    rowSelected(item, buttonName, buttonValue) {
+      this.$emit('row-selected', item, buttonName, buttonValue);
+      this.activeRow = item[this.itemKey];
+    },
+  },
+};
 </script>
+
+<template>
+  <section class="list">
+    <div class="spinner-wrapper">
+      <div class="list-title">{{ title }}</div>
+      <div class="spinner" v-show="isLoading">
+        <svg
+            width="55px"
+            height="55px"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="xMidYMid"
+            class="lds-ellipsis"
+            style="background: none;"
+        >
+          <!--circle(cx="16",cy="50",r="10")-->
+          <circle cx="84" cy="50" r="0" fill="#3b4368">
+            <animate
+                attributeName="r"
+                values="8;0;0;0;0"
+                keyTimes="0;0.25;0.5;0.75;1"
+                keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+                calcMode="spline"
+                dur="1.8s"
+                repeatCount="indefinite"
+                begin="0s"
+            ></animate>
+            <animate
+                attributeName="cx"
+                values="84;84;84;84;84"
+                keyTimes="0;0.25;0.5;0.75;1"
+                keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+                calcMode="spline"
+                dur="1.8s"
+                repeatCount="indefinite"
+                begin="0s"
+            ></animate>
+          </circle>
+          <circle cx="84" cy="50" r="0.568927" fill="#5e6fa3">
+            <animate
+                attributeName="r"
+                values="0;8;8;8;0"
+                keyTimes="0;0.25;0.5;0.75;1"
+                keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+                calcMode="spline"
+                dur="1.8s"
+                repeatCount="indefinite"
+                begin="-0.9s"
+            ></animate>
+            <animate
+                attributeName="cx"
+                values="16;16;50;84;84"
+                keyTimes="0;0.25;0.5;0.75;1"
+                keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+                calcMode="spline"
+                dur="1.8s"
+                repeatCount="indefinite"
+                begin="-0.9s"
+            ></animate>
+          </circle>
+          <circle cx="81.5821" cy="50" r="8" fill="#689cc5">
+            <animate
+                attributeName="r"
+                values="0;8;8;8;0"
+                keyTimes="0;0.25;0.5;0.75;1"
+                keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+                calcMode="spline"
+                dur="1.8s"
+                repeatCount="indefinite"
+                begin="-0.45s"
+            ></animate>
+            <animate
+                attributeName="cx"
+                values="16;16;50;84;84"
+                keyTimes="0;0.25;0.5;0.75;1"
+                keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+                calcMode="spline"
+                dur="1.8s"
+                repeatCount="indefinite"
+                begin="-0.45s"
+            ></animate>
+          </circle>
+          <circle cx="47.5821" cy="50" r="8" fill="#93dbe9">
+            <animate
+                attributeName="r"
+                values="0;8;8;8;0"
+                keyTimes="0;0.25;0.5;0.75;1"
+                keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+                calcMode="spline"
+                dur="1.8s"
+                repeatCount="indefinite"
+                begin="0s"
+            ></animate>
+            <animate
+                attributeName="cx"
+                values="16;16;50;84;84"
+                keyTimes="0;0.25;0.5;0.75;1"
+                keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+                calcMode="spline"
+                dur="1.8s"
+                repeatCount="indefinite"
+                begin="0s"
+            ></animate>
+          </circle>
+          <circle cx="16" cy="50" r="7.43107" fill="#3b4368">
+            <animate
+                attributeName="r"
+                values="0;0;8;8;8"
+                keyTimes="0;0.25;0.5;0.75;1"
+                keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+                calcMode="spline"
+                dur="1.8s"
+                repeatCount="indefinite"
+                begin="0s"
+            ></animate>
+            <animate
+                attributeName="cx"
+                values="16;16;16;50;84"
+                keyTimes="0;0.25;0.5;0.75;1"
+                keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1"
+                calcMode="spline"
+                dur="1.8s"
+                repeatCount="indefinite"
+                begin="0s"
+            ></animate>
+          </circle>
+        </svg>
+      </div>
+    </div>
+    <list-selectable-row
+        :key="item[itemKey]"
+        v-for="item in items"
+        @buttonClicked="rowSelected(item, ...arguments)"
+        :rowItem="item"
+        :itemKey="itemKey"
+        :activeRow="activeRow"
+        :buttons="item[buttons]"
+        :buttonName="buttonNames"
+        :buttonValue="buttonValues"
+        :buttonKey="buttonKeys"
+        :displayedName="displayedName"
+        :itemFormatter="itemFormatter"
+    />
+  </section>
+</template>
+
 <style lang="scss" scoped>
- @import "../styles/main.scss";
-.list{
-  background-color: rgba(255,255,255,0.6);
+@import '../styles/main.scss';
+
+.list {
+  background-color: rgba(255, 255, 255, 0.6);
   padding: 40px 15px;
-  .spinner-wrapper{
+
+  .spinner-wrapper {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    .list-title{
+
+    .list-title {
       text-align: left;
       display: flex;
       align-items: center;
       height: 55px;
-
     }
-    .spinner{
+
+    .spinner {
       justify-content: flex-end;
     }
   }
