@@ -80,12 +80,17 @@ export default {
 </template>
 
 <style lang="scss">
+  @import '../styles/breakpoints.scss';
+
 .flight-select {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   min-width: 160px;
   padding-right: 20px;
+  @include phone() {
+    padding-right: 0;
+  }
   .selector-list {
     width: 100%;
     max-width: 160px;

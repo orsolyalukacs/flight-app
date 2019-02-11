@@ -324,6 +324,7 @@ export default {
         padding-right: 15px;
         @include phone() {
           margin: 7px 0;
+          padding-right: 0;
         }
       }
       .mx-datepicker-button {

@@ -108,7 +108,6 @@ export default {
             class="lds-ellipsis"
             style="background: none;"
         >
-          <!--circle(cx="16",cy="50",r="10")-->
           <circle cx="84" cy="50" r="0" fill="#3b4368">
             <animate
                 attributeName="r"
@@ -256,6 +255,10 @@ export default {
       display: flex;
       align-items: center;
       height: 55px;
+      padding-left: 10px;
+      @include tablet() {
+        padding-left: 30px;
+      }
     }
 
     .spinner {

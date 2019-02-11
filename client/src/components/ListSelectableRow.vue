@@ -86,6 +86,7 @@ export default {
 
 <style scoped lang="scss">
 @import '../styles/main.scss';
+
 button.fares {
   font-size: 12px;
   margin: 0 2px;
@@ -118,7 +119,7 @@ time {
     justify-content: space-evenly;
   }
 }
-.selectble-row {
+.selectable-row {
   line-height: 2;
 }
 .toggled {
