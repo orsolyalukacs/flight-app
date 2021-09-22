@@ -19,6 +19,7 @@ module.exports = {
     'object-shorthand': ['error', 'always', {
       avoidQuotes: false,
     }],
+    "linebreak-style": 0,
     'import/extensions': ['error', 'always', {
       js: 'never',
       vue: 'never',
