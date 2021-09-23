@@ -7,7 +7,7 @@ module.exports = {
     root: path.resolve(__dirname, 'src'),
     alias: {
       '@': path.resolve(__dirname, 'src'),
-      '~': path.resolve(__dirname, 'src')
-    }
-  }
+      '~': path.resolve(__dirname, 'src'),
+    },
+  },
 };
