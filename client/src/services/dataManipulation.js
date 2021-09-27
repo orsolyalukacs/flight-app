@@ -8,11 +8,11 @@ export function getConnectedStations(depart, stations) {
 }
 
 export function itemTextFormatter(item) {
-  const departTime = item.departure.split('T')[1].split('+')[0];
-  const arriveTime = item.arrival.split('T')[1].split('+')[0];
-  const departJoined = departTime.split(':').splice(0, 2);
-  const arriveJoined = arriveTime.split(':').splice(0, 2);
-  return `${departJoined.join(':')} - ${arriveJoined.join(':')}`;
+  const departureTime = item.operationStartDate.split('T')[1].split(' + ')[0];
+  const arriveTime = item.rescueEndDate.split('T')[1].split('+')[0];
+  const arriveDate = arriveTime.split(':').splice(0, 2);
+  const departureDate = departureTime.split(':').splice(0, 2);
+  return `${item.iata} - ${departureDate.join(':')} - ${arriveDate.join(':')}`;
 }
 
 export function validateStations(items) {
@@ -25,6 +25,7 @@ export function validateStations(items) {
     }
     return 0;
   }
+  // console.log(items.data);
   const filteredItems = items.filter(item => item.connections.map(elem => elem.hasOwnProperty('iata')).some(elem => elem));
   filteredItems.sort(compare);
   return filteredItems;
