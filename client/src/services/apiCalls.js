@@ -1,28 +1,27 @@
+// apicalls.js original
 // these are all App-specific default params and functions
-import config from '../../api_config';
 
 const defaultDate = new Date();
-const apiKey = config.API_KEY;
-const airports = `https://api.aviationstack.com/v1/airports?access_key=${apiKey}`;
+const flightUrl = 'http://127.0.0.1:3000/flights/';
+// const searchUrl = 'http://127.0.0.1:3000/flights/search?departureStation=';
 // const defaultStationUrl = 'https://mock-air.herokuapp.com/asset/stations';
 // const defaultFlightUrl = 'https://mock-air.herokuapp.com/search?departureStation=';
 const defaultStationField = 'iata';
 const defaultFormatter = value => value.toISOString().split('T')[0];
 
-export async function getStations(stationUrl = airports) {
+export async function getStations(url = flightUrl) {
   // pulls station data from API
-  const response = await fetch(stationUrl);
+  const response = await fetch(url);
   const json = await response.json();
+  console.log(json);
   return json;
 }
-
-console.log(airports);
 
 export async function getFlights(
   departStation,
   arriveStation,
   date = defaultDate,
-  baseUrl = airports,
+  baseUrl = flightUrl,
   stationField = defaultStationField,
   dateFormatter = defaultFormatter,
 ) {
@@ -32,9 +31,13 @@ export async function getFlights(
   const departIata = departStation[stationField];
   const arriveIata = arriveStation[stationField];
   const dateString = dateFormatter(date);
+  console.log(dateString);
+  console.log(`${baseUrl + departIata}/${arriveIata}`);
   const response = await fetch(
-    `${baseUrl + departIata}&arrivalStation=${arriveIata}&date=${dateString}`,
+    // `${baseUrl + departIata}&arrivalStation=${arriveIata}&date=${dateString}`,
+    `${baseUrl + departIata}/${arriveIata}`,
   );
   const data = response.json();
+  console.log(response);
   return data;
 }
