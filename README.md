@@ -1,6 +1,6 @@
 # flight-app
 A vue.js app connecting to a flights api.
-NOTE: I found that the old API doesn't work any more, so I'm rewriting the app now.
+- NOTE: I found that the old API doesn't work any more, so I'm rewriting the app now.
 
 ## Available Scripts
 In the client directory, you can run:
