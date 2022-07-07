@@ -11,7 +11,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "moment": "^2.23.0",
+    "moment": "^2.29.4",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue2-datepicker": "^2.6.3"
